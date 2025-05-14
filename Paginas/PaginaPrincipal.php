@@ -1,10 +1,9 @@
 <!-- principal.php -->
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
+
+  <?php include '../includes/head.php'; ?>
+
   <title>Página Principal</title>
-</head>
+
 <body>
 
   <?php include '../includes/header.php'; ?>
