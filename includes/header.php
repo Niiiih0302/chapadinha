@@ -9,10 +9,8 @@
       
       <!-- Menu de navegação -->
       <nav class="nav-menu">
-        <a href="index.php">Início</a>
-        <a href="#">Sobre</a>
-        <a href="#">Serviços</a>
-        <a href="#">Contato</a>
+        <a href="PaginaPrincipal.php">Início</a>
+        <a href="PaginaCards.php">Árvores</a>
       </nav>
     </div>
   </div>

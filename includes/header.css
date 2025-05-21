@@ -1,12 +1,17 @@
-/* css/header.css */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
 
+/* Reset global */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+body {
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Estilo do cabeçalho */
 .site-header {
   background: linear-gradient(to right, #2e7d32, #66bb6a);
   padding: 1rem 0;
@@ -16,45 +21,64 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Contêiner fluido com padding */
 .container {
-  width: 100%; /* O contêiner agora ocupa 100% da largura da tela */
-  max-width: 100%; /* Remove qualquer restrição de largura */
-  padding: 0 20px; /* Garantir que o conteúdo não fique colado nas bordas */
+  width: 100%;
+  max-width: 100%;
+  padding: 0 2vw;
 }
 
+/* Alinha os itens lado a lado */
 .header-content {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   width: 100%;
 }
 
+/* Logo alinhado à esquerda */
 .logo-text {
   color: #f1f8e9;
-  font-family: 'Nunito', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
-  position: absolute; 
-  left: 0;
-  margin-left: 20px;
 }
 
+/* Menu alinhado à direita */
 .nav-menu {
-  display: flex; 
+  display: flex;
+  gap: 1.5rem;
 }
 
+/* Estilo dos links do menu */
 .nav-menu a {
-  margin-left: 20px; 
   text-decoration: none;
   color: #f1f8e9;
-  font-family: 'Nunito', sans-serif;
   font-weight: 600;
   font-size: 1rem;
-  position: relative;
   transition: color 0.3s ease;
 }
 
 .nav-menu a:hover {
   color: #ffffff;
   text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .nav-menu a {
+    font-size: 1.1rem;
+  }
 }
