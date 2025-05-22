@@ -1,6 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Quicksand:wght@400;600&display=swap');
 
-/* Reset global */
+.site-header,
+.site-header * {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -8,77 +14,139 @@
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Quicksand', sans-serif;
+  background-color: #f4f1ee;
 }
 
-/* Estilo do cabeçalho */
+/* Cabeçalho */
 .site-header {
-  background: linear-gradient(to right, #2e7d32, #66bb6a);
-  padding: 1rem 0;
+  background-color: #89b6a0;
+  padding: 0.8rem 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid #6f9683; 
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Contêiner fluido com padding */
 .container {
   width: 100%;
-  max-width: 100%;
-  padding: 0 2vw;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4%;
 }
 
-/* Alinha os itens lado a lado */
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   width: 100%;
 }
 
-/* Logo alinhado à esquerda */
-.logo-text {
-  color: #f1f8e9;
-  font-size: 1.5rem;
-  font-weight: 700;
+/* Container do Logo - Ajustes principais aqui */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-left: 7rem; 
+  padding: 0.5rem 0; 
+  transform: translateX(40px); /* Deslocamento adicional para direita */
 }
 
-/* Menu alinhado à direita */
+/* Imagem do Logo */
+.logo-image {
+  height: 3rem;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Texto do Logo */
+.logo-text {
+  font-family: 'Marcellus', serif;
+  color: #4b6043;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+
+/* NAV MENU */
 .nav-menu {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem; 
+  margin-left: auto;
+  margin-right: 20px;
 }
 
-/* Estilo dos links do menu */
+/* Links */
 .nav-menu a {
+  position: relative;
   text-decoration: none;
-  color: #f1f8e9;
+  color: #4b6043;
   font-weight: 600;
   font-size: 1rem;
-  transition: color 0.3s ease;
+  padding: 0.3rem 0;
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
-.nav-menu a:hover {
-  color: #ffffff;
-  text-decoration: underline;
+/* Indicador */
+.nav-menu a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 2px;
+  background-color: #4b6043;
+  transition: width 0.3s ease;
+  border-radius: 2px;
 }
 
-/* Responsividade */
+.nav-menu a:hover::after {
+  width: 100%;
+}
+
+.nav-menu a.active::after {
+  width: 100%;
+}
+
 @media (max-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+
   .header-content {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  .logo-container {
+    margin-left: 0;
+    transform: translateX(15px); 
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 1rem;
+  }
+
+  .logo-image {
+    height: 2rem;
   }
 
   .nav-menu {
     flex-direction: column;
-    align-items: flex-start;
+    gap: 1rem;
     width: 100%;
+    margin: 0;
+    padding: 0 1rem 1rem;
   }
 
   .nav-menu a {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    padding: 0.5rem 0;
   }
 }

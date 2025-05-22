@@ -8,6 +8,27 @@
     font-size: 3rem;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
   }
+  
+   * --- GARANTE QUE OS 3 CARDS FICARÃO LADO A LADO --- */
+  .row.row-cols-1.row-cols-md-3.g-4 {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important; /* Distribui os cards igualmente */
+    margin: 0 -0.75rem !important; 
+  }
+
+  .row.row-cols-1.row-cols-md-3.g-4 > .col {
+    flex: 0 0 calc(33.333% - 1.5rem) !important; 
+    padding: 0 0.75rem !important; 
+    margin-bottom: 1.5rem !important; 
+  }
+
+  /* Ajuste para mobile (1 card por linha) */
+  @media (max-width: 768px) {
+    .row.row-cols-1.row-cols-md-3.g-4 > .col {
+      flex: 0 0 100% !important;
+    }
+  }
 </style>
 
 <title>Página Principal</title>
