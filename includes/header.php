@@ -13,6 +13,7 @@
       <!-- Menu de navegação -->
       <nav class="nav-menu">
         <a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Início</a>
+        <a href="PaginaCards.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'PaginaCards.php' ? 'active' : ''; ?>">PaginaCards</a>
       </nav>
     </div>
   </div>

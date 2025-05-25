@@ -4,7 +4,6 @@
 .site-header * {
   margin: 0 !important;
   padding: 0 !important;
-  border: 0 !important;
 }
 
 * {
@@ -40,7 +39,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 200px;
 }
 
 /* Container do Logo - Ajustes principais aqui */
@@ -75,7 +74,7 @@ body {
 .nav-menu {
   display: flex;
   gap: 2rem; 
-  margin-left: auto;
+  margin-left: 50px;
   margin-right: 20px;
 }
 
