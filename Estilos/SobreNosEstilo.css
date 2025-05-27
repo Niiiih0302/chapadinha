@@ -1,0 +1,121 @@
+
+
+body {
+
+    line-height: 1.7;
+    color: #333;
+}
+
+.page-title-container {
+    padding: 2rem 0;
+    background-color: #f8f9fa; 
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 3rem !important; 
+}
+
+.page-title {
+    font-family: 'Marcellus', serif; 
+    color: #4b6043; 
+    font-size: 2.8rem;
+    font-weight: 700;
+}
+
+.lead {
+    font-size: 1.15rem;
+    color: #555;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-section {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2.5rem !important;
+}
+
+.section-title {
+    font-family: 'Marcellus', serif;
+    color: #6f9683; 
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #89b6a0; 
+    text-align: center;
+}
+
+#sobre-fatec .fatec-content {
+    text-align: center; 
+}
+
+#sobre-fatec .fatec-logo {
+    max-width: 300px; 
+    margin-bottom: 1.5rem !important;
+}
+
+#sobre-fatec .btn-success {
+    background-color: #2e7d32; 
+    border-color: #2e7d32;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#sobre-fatec .btn-success:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+}
+
+#nossa-equipe .section-title {
+    margin-bottom: 2.5rem; 
+}
+
+.integrante-card {
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.integrante-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.integrante-foto {
+    width: 120px; 
+    height: 120px;
+    border-radius: 50%; 
+    object-fit: cover;
+    margin: 1.5rem auto 1rem;
+    border: 3px solid #89b6a0; 
+}
+
+.integrante-nome {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #4b6043;
+    margin-bottom: 0.3rem;
+}
+
+.integrante-funcao {
+    font-size: 0.9rem;
+    color: #777;
+    min-height: 40px; 
+}
+
+@media (max-width: 767.98px) {
+    .page-title {
+        font-size: 2.2rem;
+    }
+    .lead {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+    }
+    .content-section {
+        padding: 1.5rem;
+    }
+}

@@ -1,11 +1,7 @@
+/* chapadinha/includes/header.css - Com Header Fixo */
 @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Quicksand:wght@400;600&display=swap');
 
-.site-header,
-.site-header * {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
+/* 1. Reset Básico e Body */
 * {
   margin: 0;
   padding: 0;
@@ -14,138 +10,145 @@
 
 body {
   font-family: 'Quicksand', sans-serif;
-  background-color: #f4f1ee;
+  background-color: #f4f1ee; /* */
+  padding-top: 5.5rem;
+  
 }
 
-/* Cabeçalho */
-.site-header {
-  background-color: #89b6a0;
-  padding: 0.8rem 0;
-  position: sticky;
+/* 2. Estilos do Header Principal (.site-header) */
+body .site-header {
+  background-color: #89b6a0; /* */
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  position: fixed;
   top: 0;
-  z-index: 1000;
-  border-bottom: 2px solid #6f9683; 
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  left: 0;
+  width: 100%; 
+  z-index: 1000; /* */
+  border-bottom: 2px solid #6f9683; /* */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* */
 }
 
-.container {
+/* 3. Container Principal (para centralizar e limitar a largura) */
+body .site-header .container {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 4%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 200px;
-}
-
-/* Container do Logo - Ajustes principais aqui */
-.logo-container {
+/* 4. Conteúdo do Header (o container flex Pai) */
+body .site-header .header-content {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  margin-left: 7rem; 
-  padding: 0.5rem 0; 
-  transform: translateX(40px); /* Deslocamento adicional para direita */
+  width: 100%;
 }
 
-/* Imagem do Logo */
-.logo-image {
-  height: 3rem;
+/* 5. Container do Logo (Filho Flex) */
+body .site-header .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* */
+  flex-shrink: 0;
+}
+
+body .site-header .logo-image {
+  height: 3rem; /* */
   width: auto;
-  object-fit: contain;
+  object-fit: contain; /* */
+  display: block;
 }
 
-/* Texto do Logo */
-.logo-text {
-  font-family: 'Marcellus', serif;
-  color: #4b6043;
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  white-space: nowrap;
-  margin-left: 0.5rem;
+body .site-header .logo-text {
+  font-family: 'Marcellus', serif; /* */
+  color: #4b6043; /* */
+  font-size: 1.3rem; /* */
+  font-weight: 700; /* */
+  letter-spacing: 1px; /* */
+  white-space: nowrap; /* */
+  line-height: 1;
 }
 
-/* NAV MENU */
-.nav-menu {
+/* 6. Menu de Navegação (Filho Flex) */
+body .site-header .nav-menu {
   display: flex;
-  gap: 2rem; 
-  margin-left: 50px;
-  margin-right: 20px;
+  align-items: center;
+  margin-left: auto; 
+  flex-shrink: 0;
 }
 
-/* Links */
-.nav-menu a {
+body .site-header .nav-menu a {
   position: relative;
   text-decoration: none;
-  color: #4b6043;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 0.3rem 0;
-  transition: all 0.3s ease;
-  white-space: nowrap;
+  color: #4b6043; /* */
+  font-weight: 600; /* */
+  font-size: 1rem; /* */
+  padding: 0.3rem 0.75rem;
+  transition: color 0.3s ease; /* */
+  white-space: nowrap; /* */
+  line-height: 1;
 }
 
-/* Indicador */
-.nav-menu a::after {
+/* Efeito de sublinhado para os links do menu */
+body .site-header .nav-menu a::after {
   content: '';
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  width: 0;
-  height: 2px;
-  background-color: #4b6043;
-  transition: width 0.3s ease;
-  border-radius: 2px;
+  position: absolute; /* */
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: -3px; /* */
+  width: calc(100% - 1.5rem);
+  max-width: 0;
+  height: 2px; /* */
+  background-color: #4b6043; /* */
+  transition: max-width 0.3s ease; /* */
+  border-radius: 2px; /* */
 }
 
-.nav-menu a:hover::after {
-  width: 100%;
+body .site-header .nav-menu a:hover::after,
+body .site-header .nav-menu a.active::after {
+  max-width: calc(100% - 1.5rem); /* */
 }
 
-.nav-menu a.active::after {
-  width: 100%;
-}
-
+/* 7. Ajustes para Telas Menores (Mobile) */
 @media (max-width: 768px) {
-  .container {
-    padding: 0 2rem;
+  body .site-header .header-content {
+    flex-direction: column; /* */
+    align-items: flex-start; /* */
+    gap: 1rem; /* */
   }
 
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 0.5rem 0;
+  body .site-header .logo-image {
+    height: 2.5rem; /* */
+  }
+  
+  body .site-header .logo-text {
+    font-size: 1.2rem;
   }
 
-  .logo-container {
+  body .site-header .nav-menu {
     margin-left: 0;
-    transform: translateX(15px); 
-    gap: 0.5rem;
+    flex-direction: column; /* */
+    align-items: flex-start;
+    width: 100%; /* */
+    gap: 0;
+  }
+
+  body .site-header .nav-menu a {
+    padding: 0.6rem 0;
     width: 100%;
-    justify-content: flex-start;
-    padding-left: 1rem;
   }
 
-  .logo-image {
-    height: 2rem;
+  body .site-header .nav-menu a::after {
+    left: 0;
+    right: auto;
+    width: 0;
+    max-width: 0;
   }
-
-  .nav-menu {
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    margin: 0;
-    padding: 0 1rem 1rem;
-  }
-
-  .nav-menu a {
-    font-size: 1rem;
-    padding: 0.5rem 0;
+  body .site-header .nav-menu a:hover::after,
+  body .site-header .nav-menu a.active::after {
+     width: 50px;
+     max-width: 50px;
   }
 }
