@@ -42,8 +42,8 @@
 
     <div class="position-relative container">
       <h1 id="welcome-msg" class="mb-4 chewy-font">Bem-vindo à Chapadinha!</h1>
-      <form class="d-flex justify-content-center" action="" method="get">
-        <input class="form-control w-50 me-2" type="text" id="search-bar" name="search-bar" placeholder="Ex: Árvore">
+      <form class="d-flex justify-content-center" action="pesquisa.php" method="get">
+        <input class="form-control w-50 me-2" type="text" id="search-bar" name="BarraPesquisa" placeholder="Ex: Árvore">
         <button class="btn btn-primary" id="search-bt" type="submit">Pesquisar</button>
       </form>
     </div>
