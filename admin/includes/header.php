@@ -54,7 +54,7 @@ require_once 'auth_check.php';
                             <i class="bi bi-person-circle"></i> <?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? 'Usuário'); ?>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="../index.php" target="_blank"><i class="bi bi-window"></i> Ver Site</a></li>
+                            <li><a class="dropdown-item" href="../Paginas/index.php" target="_blank"><i class="bi bi-window"></i> Ver Site</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a></li>
                         </ul>
