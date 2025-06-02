@@ -21,7 +21,7 @@ SELECT
     b.nome AS bioma,
     m.CAP,
     m.DAP,
-    m.armotizacao,
+    m.amortizacao,
     t.exotica_nativa,
     t.medicinal,
     t.toxica
@@ -62,7 +62,7 @@ if ($result->num_rows > 0) {
         
         // Imagem
         if ($row['imagem']) {
-            echo "<img src='img/" . $row['imagem'] . "' class='card-img-top' alt='Imagem da árvore' style='height: 200px; object-fit: cover;'>";
+            echo "<img src='../img/" . $row['imagem'] . "' class='card-img-top' alt='Imagem da árvore' style='height: 200px; object-fit: cover;'>";
         } else {
             echo "<img src='img/sem-imagem.png' class='card-img-top' alt='Sem imagem' style='height: 200px; object-fit: cover;'>";
         }

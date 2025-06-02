@@ -1,5 +1,9 @@
 <?php 
 include '../includes/head.php';
+include '../includes/conexao.php'; 
+
+$base_path = dirname($_SERVER['SCRIPT_NAME']);
+$url_img = '/chapadinha/img/';
 ?>
 
 <link rel="stylesheet" href="../Estilos/PagCardsEstilo.css">
@@ -9,61 +13,38 @@ include '../includes/head.php';
 
 <div class="cards-section">
     <div class="card-container">
-        <div class="card">
-            <div class="content">
-                <div class="front">
-                    <img src="imagem-arvore1.jpg" alt="Árvore 1">
-                    <h3>Nome da Árvore 1</h3>
-                </div>
-            </div>
-        </div>
+        <?php
+        // Consulta ao banco de dados
+        $sql = "SELECT a.imagem, np.nome
+                FROM arvore a
+                LEFT JOIN nome_popular np ON a.id = np.fk_arvore
+                GROUP BY a.id";
 
-        <div class="card">
-            <div class="content">
-                <div class="front">
-                    <img src="imagem-arvore2.jpg" alt="Árvore 2">
-                    <h3>Nome da Árvore 2</h3>
-                </div>
-            </div>
-        </div>
+        $resultado = mysqli_query($conn, $sql);
 
-        <div class="card">
-            <div class="content">
-                <div class="front">
-                    <img src="imagem-arvore3.jpg" alt="Árvore 3">
-                    <h3>Nome da Árvore 3</h3>
+        if (mysqli_num_rows($resultado) > 0) {
+            $count = 0;
+            while ($arvore = mysqli_fetch_assoc($resultado)) {
+                // Quebra de linha a cada 3 cards
+                if ($count > 0 && $count % 3 == 0) {
+                    echo '</div><div class="card-container">';
+                }
+        ?>
+                <div class="card">
+                    <div class="content">
+                        <div class="front">
+                            <img src="<?php echo $url_img . $arvore['imagem']; ?>" alt="<?php echo $arvore['nome']; ?>">
+                            <h3><?php echo $arvore['nome']; ?></h3>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card-container">
-        <div class="card">
-            <div class="content">
-                <div class="front">
-                    <img src="imagem-arvore1.jpg" alt="Árvore 1">
-                    <h3>Nome da Árvore 1</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="content">
-                <div class="front">
-                    <img src="imagem-arvore2.jpg" alt="Árvore 2">
-                    <h3>Nome da Árvore 2</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="content">
-                <div class="front">
-                    <img src="imagem-arvore3.jpg" alt="Árvore 3">
-                    <h3>Nome da Árvore 3</h3>
-                </div>
-            </div>
-        </div>
+        <?php
+                $count++;
+            }
+        } else {
+            echo "<p>Nenhuma árvore encontrada.</p>";
+        }
+        ?>
     </div>
 </div>
 
