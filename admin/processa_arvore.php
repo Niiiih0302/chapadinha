@@ -1,137 +1,135 @@
 <?php
-// Inicia a sessão
 session_start();
 
-// Verifica se o usuário está logado (exceto para a ação 'buscar', que é AJAX)
 if (!isset($_GET['acao']) || $_GET['acao'] !== 'buscar') {
-    require_once 'includes/auth_check.php'; //
+    require_once 'includes/auth_check.php'; 
 }
 
-// Inclui arquivos necessários
-require_once '../api/v1/config/database.php'; // Define getConnection()
-require_once 'includes/Arvore.php';        // Define a classe Arvore
 
-// Definir o caminho para as imagens
-$base_path = dirname(dirname($_SERVER['SCRIPT_NAME'])); //
-$dir_img_save = dirname(dirname(__FILE__)) . '/img/';   // Caminho físico para salvar uploads
+require_once '../api/v1/config/database.php'; 
+require_once 'includes/Arvore.php';        
 
-// Função para processar o upload de imagem
-function processarUploadImagem($arquivo, $dir_img_param) { //
-    if ($arquivo['error'] != 0 && $arquivo['error'] != UPLOAD_ERR_NO_FILE) { //
-        switch ($arquivo['error']) { //
-            case UPLOAD_ERR_INI_SIZE: //
-            case UPLOAD_ERR_FORM_SIZE: //
-                throw new Exception("O arquivo é muito grande. Tamanho máximo permitido: " . ini_get('upload_max_filesize')); //
-            case UPLOAD_ERR_PARTIAL: //
-                throw new Exception("O upload do arquivo foi interrompido."); //
-            case UPLOAD_ERR_NO_FILE: //
-                return null; //
-            case UPLOAD_ERR_NO_TMP_DIR: //
-            case UPLOAD_ERR_CANT_WRITE: //
-            case UPLOAD_ERR_EXTENSION: //
-                throw new Exception("Erro do servidor ao processar o arquivo."); //
-            default: //
+
+$base_path = dirname(dirname($_SERVER['SCRIPT_NAME'])); 
+$dir_img_save = dirname(dirname(__FILE__)) . '/img/';   
+
+
+function processarUploadImagem($arquivo, $dir_img_param) { 
+    if ($arquivo['error'] != 0 && $arquivo['error'] != UPLOAD_ERR_NO_FILE) { 
+        switch ($arquivo['error']) { 
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE: 
+                throw new Exception("O arquivo é muito grande. Tamanho máximo permitido: " . ini_get('upload_max_filesize')); 
+            case UPLOAD_ERR_PARTIAL: 
+                throw new Exception("O upload do arquivo foi interrompido."); 
+            case UPLOAD_ERR_NO_FILE: 
+                return null; 
+            case UPLOAD_ERR_NO_TMP_DIR: 
+            case UPLOAD_ERR_CANT_WRITE: 
+            case UPLOAD_ERR_EXTENSION: 
+                throw new Exception("Erro do servidor ao processar o arquivo."); 
+            default: 
                 throw new Exception("Erro desconhecido no upload do arquivo (código: {$arquivo['error']}).");
         }
     }
-     if ($arquivo['error'] == UPLOAD_ERR_NO_FILE) { //
+     if ($arquivo['error'] == UPLOAD_ERR_NO_FILE) { 
         return null; 
     }
     
-    $tipos_permitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']; //
-    if (!in_array($arquivo['type'], $tipos_permitidos)) { //
-        throw new Exception("Tipo de arquivo não permitido. Apenas imagens JPG, PNG e GIF são aceitas."); //
+    $tipos_permitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']; 
+    if (!in_array($arquivo['type'], $tipos_permitidos)) { 
+        throw new Exception("Tipo de arquivo não permitido. Apenas imagens JPG, PNG e GIF são aceitas."); 
     }
     
-    $tamanho_maximo = 5 * 1024 * 1024; //
-    if ($arquivo['size'] > $tamanho_maximo) { //
-        throw new Exception("O tamanho do arquivo excede o limite máximo de 5MB."); //
+    $tamanho_maximo = 5 * 1024 * 1024; 
+    if ($arquivo['size'] > $tamanho_maximo) { 
+        throw new Exception("O tamanho do arquivo excede o limite máximo de 5MB."); 
     }
     
-    $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION)); //
-    $nome_base = pathinfo($arquivo['name'], PATHINFO_FILENAME); //
+    $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION)); 
+    $nome_base = pathinfo($arquivo['name'], PATHINFO_FILENAME); 
     
-    $nome_base = preg_replace('/[^a-zA-Z0-9_-]/', '', $nome_base); //
-    if (empty($nome_base)) { //
-        $nome_base = 'imagem_' . date('YmdHis'); //
+    $nome_base = preg_replace('/[^a-zA-Z0-9_-]/', '', $nome_base); 
+    if (empty($nome_base)) { 
+        $nome_base = 'imagem_' . date('YmdHis'); 
     }
     
-    $nome_arquivo = $nome_base . '.' . $extensao; //
-    $contador = 1; //
+    $nome_arquivo = $nome_base . '.' . $extensao; 
+    $contador = 1; 
     
-    while (file_exists($dir_img_param . $nome_arquivo)) { //
-        $nome_arquivo = $nome_base . '_' . $contador . '.' . $extensao; //
-        $contador++; //
+    while (file_exists($dir_img_param . $nome_arquivo)) { 
+        $nome_arquivo = $nome_base . '_' . $contador . '.' . $extensao; 
+        $contador++; 
     }
     
-    $caminho_arquivo = $dir_img_param . $nome_arquivo; //
+    $caminho_arquivo = $dir_img_param . $nome_arquivo; 
     
-    if (!move_uploaded_file($arquivo['tmp_name'], $caminho_arquivo)) { //
-        throw new Exception("Falha ao mover o arquivo para o diretório de destino."); //
+    if (!move_uploaded_file($arquivo['tmp_name'], $caminho_arquivo)) { 
+        throw new Exception("Falha ao mover o arquivo para o diretório de destino."); 
     }
     
-    return $nome_arquivo; //
+    return $nome_arquivo; 
 }
 
-// Conecta ao banco de dados
+
 try {
-    $db = getConnection(); //
-    if ($db->connect_error) { //
-        throw new Exception("Erro de conexão com banco de dados: " . $db->connect_error); //
+    $db = getConnection(); 
+    if ($db->connect_error) { 
+        throw new Exception("Erro de conexão com banco de dados: " . $db->connect_error); 
     }
-    $arvoreModel = new Arvore($db); //
+    $arvoreModel = new Arvore($db); 
 } catch (Exception $e) {
-    if (isset($_GET['acao']) && $_GET['acao'] === 'buscar') { //
-        header('Content-Type: application/json'); //
-        echo json_encode(['status' => 'erro', 'mensagem' => "Erro de DB: " . $e->getMessage()]); //
+    if (isset($_GET['acao']) && $_GET['acao'] === 'buscar') { 
+        header('Content-Type: application/json'); 
+        echo json_encode(['status' => 'erro', 'mensagem' => "Erro de DB: " . $e->getMessage()]); 
     } else {
-        $_SESSION['arvore_erro'] = "Erro de conexão com o banco: " . $e->getMessage(); //
-        header('Location: arvores.php'); //
+        $_SESSION['arvore_erro'] = "Erro de conexão com o banco: " . $e->getMessage(); 
+        header('Location: arvores.php'); 
     }
-    exit; //
+    exit; 
 }
 
-// Processa requisição GET (AJAX para buscar árvore completa)
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'] === 'buscar') { //
-    header('Content-Type: application/json'); //
-    $id = $_GET['id'] ?? ''; //
-    if (empty($id) || !is_numeric($id)) { //
-        echo json_encode(['status' => 'erro', 'mensagem' => 'ID de árvore inválido.']); //
-        exit; //
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'] === 'buscar') { 
+    header('Content-Type: application/json'); 
+    $id = $_GET['id'] ?? ''; 
+    if (empty($id) || !is_numeric($id)) { 
+        echo json_encode(['status' => 'erro', 'mensagem' => 'ID de árvore inválido.']); 
+        exit; 
     }
-    $arvore = $arvoreModel->buscarPorId($id); //
-    if ($arvore) { //
-        echo json_encode(['status' => 'sucesso', 'arvore' => $arvore]); //
+    $arvore = $arvoreModel->buscarPorId($id); 
+    if ($arvore) { 
+        echo json_encode(['status' => 'sucesso', 'arvore' => $arvore]); 
     } else {
-        echo json_encode(['status' => 'erro', 'mensagem' => 'Árvore não encontrada ou erro ao buscar dados.']); //
+        echo json_encode(['status' => 'erro', 'mensagem' => 'Árvore não encontrada ou erro ao buscar dados.']); 
     }
-    exit; //
+    exit; 
 }
 
-// Processa requisição POST (formulários de cadastrar/editar/excluir)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') { //
-    $acao = $_POST['acao'] ?? ''; //
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+    $acao = $_POST['acao'] ?? ''; 
     $dados_arvore = []; 
 
     try {
-        switch ($acao) { //
-            case 'cadastrar': //
-            case 'editar': //
+        switch ($acao) { 
+            case 'cadastrar': 
+            case 'editar': 
                 
-                $dados_arvore['nome_cientifico'] = $_POST['nome_cientifico'] ?? ''; //
-                $dados_arvore['familia'] = !empty($_POST['familia']) ? $_POST['familia'] : null; //
-                $dados_arvore['genero'] = !empty($_POST['genero']) ? $_POST['genero'] : null; //
-                $dados_arvore['curiosidade'] = !empty($_POST['curiosidade']) ? $_POST['curiosidade'] : null; //
+                $dados_arvore['nome_cientifico'] = $_POST['nome_cientifico'] ?? ''; 
+                $dados_arvore['familia'] = !empty($_POST['familia']) ? $_POST['familia'] : null; 
+                $dados_arvore['genero'] = !empty($_POST['genero']) ? $_POST['genero'] : null; 
+                $dados_arvore['curiosidade'] = !empty($_POST['curiosidade']) ? $_POST['curiosidade'] : null; 
 
                 $nome_imagem_nova = null;
-                if (isset($_FILES['imagem_upload']) && $_FILES['imagem_upload']['error'] != UPLOAD_ERR_NO_FILE) { //
-                    $nome_imagem_nova = processarUploadImagem($_FILES['imagem_upload'], $dir_img_save); //
+                if (isset($_FILES['imagem_upload']) && $_FILES['imagem_upload']['error'] != UPLOAD_ERR_NO_FILE) { 
+                    $nome_imagem_nova = processarUploadImagem($_FILES['imagem_upload'], $dir_img_save); 
                 }
                 
-                if ($acao === 'cadastrar') { //
+                if ($acao === 'cadastrar') { 
                     $dados_arvore['imagem'] = $nome_imagem_nova; 
-                } else { // Editar //
-                    $dados_arvore['id'] = $_POST['id'] ?? ''; //
+                } else { 
+                    $dados_arvore['id'] = $_POST['id'] ?? ''; 
                     if (empty($dados_arvore['id'])) throw new Exception("ID da árvore não fornecido para edição.");
                     
                     if ($nome_imagem_nova) {
@@ -141,18 +139,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //
                            @unlink($dir_img_save . $imagemAntiga);
                         }
                     } else {
-                        $dados_arvore['imagem'] = $_POST['imagem_atual'] ?? null;  //
+                        $dados_arvore['imagem'] = $_POST['imagem_atual'] ?? null;  
                     }
                 }
                 
-                // Nomes Populares - recebidos de 'nomes_populares_str'
+
                 $nomes_populares_input_str = $_POST['nomes_populares_str'] ?? '';
                 $dados_arvore['nomes_populares'] = !empty($nomes_populares_input_str) ? array_map('trim', explode(',', $nomes_populares_input_str)) : [];
 
-                // Biomas - recebidos de 'biomas_nomes_str'
                 $biomas_input_str = $_POST['biomas_nomes_str'] ?? '';
                 $dados_arvore['biomas_nomes'] = !empty($biomas_input_str) ? array_map('trim', explode(',', $biomas_input_str)) : [];
-                // Remover entradas vazias que podem surgir de múltiplas vírgulas (ex: "Bioma A,,Bioma B")
                 $dados_arvore['biomas_nomes'] = array_filter($dados_arvore['biomas_nomes'], function($value) { return !is_null($value) && $value !== ''; });
 
 
@@ -172,59 +168,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //
                     throw new Exception("O nome científico é obrigatório.");
                 }
 
-                if ($acao === 'cadastrar') { //
+                if ($acao === 'cadastrar') { 
                     $id_criado = $arvoreModel->criar($dados_arvore);
                     if ($id_criado) {
-                        $_SESSION['arvore_sucesso'] = "Árvore (ID: $id_criado) e seus dados foram cadastrados com sucesso!"; //
+                        $_SESSION['arvore_sucesso'] = "Árvore (ID: $id_criado) e seus dados foram cadastrados com sucesso!"; 
                     } else {
                         throw new Exception("Erro ao cadastrar árvore e seus dados. Verifique os logs para mais detalhes.");
                     }
-                } else { // editar //
+                } else { 
                     if ($arvoreModel->atualizar($dados_arvore['id'], $dados_arvore)) {
-                        $_SESSION['arvore_sucesso'] = "Árvore (ID: {$dados_arvore['id']}) e seus dados foram atualizados com sucesso!"; //
+                        $_SESSION['arvore_sucesso'] = "Árvore (ID: {$dados_arvore['id']}) e seus dados foram atualizados com sucesso!"; 
                     } else {
                         throw new Exception("Erro ao atualizar árvore e seus dados. Verifique os logs para mais detalhes.");
                     }
                 }
-                break; //
+                break; 
 
-            case 'excluir': //
-                $id = $_POST['id'] ?? ''; //
-                if (empty($id)) { //
+            case 'excluir': 
+                $id = $_POST['id'] ?? ''; 
+                if (empty($id)) { 
                     throw new Exception("ID da árvore não fornecido para exclusão.");
                 }
                 
                 $arvoreParaExcluir = $arvoreModel->buscarPorId($id); 
                 
-                if ($arvoreModel->excluir($id)) { //
+                if ($arvoreModel->excluir($id)) { 
                     if ($arvoreParaExcluir && !empty($arvoreParaExcluir['imagem'])) {
                        if (file_exists($dir_img_save . $arvoreParaExcluir['imagem'])) {
                            @unlink($dir_img_save . $arvoreParaExcluir['imagem']); 
                        }
                     }
-                    $_SESSION['arvore_sucesso'] = "Árvore (ID: $id) excluída com sucesso!"; //
+                    $_SESSION['arvore_sucesso'] = "Árvore (ID: $id) excluída com sucesso!"; 
                 } else {
-                    throw new Exception("Erro ao excluir árvore."); //
+                    throw new Exception("Erro ao excluir árvore."); 
                 }
-                break; //
+                break; 
             
-            default: //
-                throw new Exception("Ação inválida."); //
+            default: 
+                throw new Exception("Ação inválida."); 
         }
     } catch (Exception $e) {
-        $_SESSION['arvore_erro'] = "Erro: " . $e->getMessage(); //
+        $_SESSION['arvore_erro'] = "Erro: " . $e->getMessage(); 
     }
     
-    header('Location: arvores.php'); //
-    exit; //
+    header('Location: arvores.php'); 
+    exit; 
 } else if ($_SERVER['REQUEST_METHOD'] !== 'GET') { 
-    $_SESSION['arvore_erro'] = "Método de requisição não suportado."; //
-    header('Location: arvores.php'); //
-    exit; //
+    $_SESSION['arvore_erro'] = "Método de requisição não suportado."; 
+    header('Location: arvores.php'); 
+    exit; 
 }
 else if ($_SERVER['REQUEST_METHOD'] === 'GET' && (!isset($_GET['acao']) || $_GET['acao'] !== 'buscar')) {
-    header('Location: arvores.php'); //
-    exit; //
+    header('Location: arvores.php'); 
+    exit; 
 }
 
 ?>

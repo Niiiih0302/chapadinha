@@ -1,7 +1,4 @@
 <?php
-/**
- * Classe Arvore - Modelo para acesso administrativo aos dados de árvores
- */
 class Arvore {
     private $conn;
     /**
@@ -22,7 +19,6 @@ class Arvore {
             $id = $this->conn->real_escape_string($id);
             $arvore = null;
 
-            // 1. Buscar dados da tabela principal 'arvore'
             $query_arvore = "SELECT * FROM arvore WHERE id = '$id'";
             $result_arvore = $this->conn->query($query_arvore);
             if (!$result_arvore) {
@@ -31,7 +27,6 @@ class Arvore {
             if ($result_arvore->num_rows > 0) {
                 $arvore = $result_arvore->fetch_assoc();
 
-                // 2. Buscar nomes populares
                 $query_np = "SELECT nome FROM nome_popular WHERE fk_arvore = '$id'";
                 $result_np = $this->conn->query($query_np);
                 if (!$result_np) throw new Exception("Erro ao buscar nomes populares: " . $this->conn->error);
@@ -40,19 +35,17 @@ class Arvore {
                     $arvore['nomes_populares'][] = $row_np['nome'];
                 }
 
-                // 3. Buscar NOMES dos biomas associados
                 $query_biomas_nomes = "SELECT b.nome 
                                        FROM arvore_bioma ab
                                        JOIN bioma b ON ab.fk_bioma = b.id
                                        WHERE ab.fk_arvore = '$id'";
                 $result_biomas_nomes = $this->conn->query($query_biomas_nomes);
                 if (!$result_biomas_nomes) throw new Exception("Erro ao buscar nomes dos biomas da árvore: " . $this->conn->error);
-                $arvore['biomas_nomes'] = []; // Alterado de biomas_ids para biomas_nomes
+                $arvore['biomas_nomes'] = []; 
                 while ($row_bn = $result_biomas_nomes->fetch_assoc()) {
                     $arvore['biomas_nomes'][] = $row_bn['nome'];
                 }
 
-                // 4. Buscar medidas
                 $query_medidas = "SELECT CAP, DAP, armotizacao FROM medidas WHERE fk_arvore = '$id' LIMIT 1";
                 $result_medidas = $this->conn->query($query_medidas);
                 if (!$result_medidas) throw new Exception("Erro ao buscar medidas: " . $this->conn->error);
@@ -62,7 +55,6 @@ class Arvore {
                     $arvore['medidas'] = ['CAP' => null, 'DAP' => null, 'armotizacao' => null];
                 }
 
-                // 5. Buscar tipo de árvore
                 $query_tipo = "SELECT exotica_nativa, medicinal, toxica FROM tipo_arvore WHERE fk_arvore = '$id' LIMIT 1";
                 $result_tipo = $this->conn->query($query_tipo);
                 if (!$result_tipo) throw new Exception("Erro ao buscar tipo de árvore: " . $this->conn->error);
@@ -124,7 +116,6 @@ class Arvore {
             $row = $result->fetch_assoc();
             return (int)$row['id'];
         } else {
-            // Bioma não existe, cria um novo (descrição pode ser nula ou um placeholder)
             $query_insert = "INSERT INTO bioma (nome, descricao) VALUES ('$nomeBiomaEsc', NULL)";
             if (!$this->conn->query($query_insert)) {
                 throw new Exception("Erro ao criar novo bioma '$nomeBiomaEsc': " . $this->conn->error);
@@ -156,7 +147,7 @@ class Arvore {
             }
             $id_arvore = $this->conn->insert_id;
 
-            // Inserir nomes populares
+
             if (!empty($dados['nomes_populares'])) {
                 foreach ($dados['nomes_populares'] as $np) {
                     $nome_pop = $this->conn->real_escape_string(trim($np));
@@ -167,7 +158,7 @@ class Arvore {
                 }
             }
 
-            // Inserir biomas associados (a partir dos nomes)
+
             if (!empty($dados['biomas_nomes'])) {
                 foreach ($dados['biomas_nomes'] as $nome_bioma_str) {
                     $id_bioma = $this->obterIdBioma($nome_bioma_str);
@@ -179,7 +170,7 @@ class Arvore {
             }
 
 
-            // Inserir medidas
+
             if (isset($dados['medidas'])) {
                 $cap = isset($dados['medidas']['CAP']) && $dados['medidas']['CAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['CAP']) : null;
                 $dap = isset($dados['medidas']['DAP']) && $dados['medidas']['DAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['DAP']) : null;
@@ -196,7 +187,7 @@ class Arvore {
                 }
             }
 
-            // Inserir tipo de árvore
+
             if (isset($dados['tipo_arvore'])) {
                 $exotica_nativa = isset($dados['tipo_arvore']['exotica_nativa']) && $dados['tipo_arvore']['exotica_nativa'] !== '' ? (int)$dados['tipo_arvore']['exotica_nativa'] : null;
                 $medicinal = isset($dados['tipo_arvore']['medicinal']) ? (int)$dados['tipo_arvore']['medicinal'] : 0; 
@@ -270,7 +261,6 @@ class Arvore {
                 }
             }
 
-            // Atualizar biomas associados (excluir os antigos e inserir os novos baseados nos nomes)
             $query_del_ab = "DELETE FROM arvore_bioma WHERE fk_arvore = '$id_arvore'";
             if (!$this->conn->query($query_del_ab)) throw new Exception("Erro ao limpar biomas antigos da árvore: " . $this->conn->error);
             
@@ -348,29 +338,5 @@ class Arvore {
         }
     }
 
-    // O método listarBiomas() não é mais necessário para o formulário da árvore,
-    // mas pode ser útil para uma futura página de gerenciamento de biomas.
-    // Vou deixá-lo comentado por enquanto.
-    /*
-    public function listarBiomas() {
-        try {
-            $query = "SELECT id, nome FROM bioma ORDER BY nome ASC";
-            $result = $this->conn->query($query);
-            if (!$result) {
-                throw new Exception("Erro ao listar biomas: " . $this->conn->error);
-            }
-            $biomas = [];
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $biomas[] = $row;
-                }
-            }
-            return $biomas;
-        } catch (Exception $e) {
-            error_log("Erro ao listar biomas: " . $e->getMessage());
-            return [];
-        }
-    }
-    */
 }
 ?>

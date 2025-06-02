@@ -1,10 +1,9 @@
 <?php
-// Habilitar exibição de erros para depuração
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Definir o caminho relativo para as imagens
 $base_path = dirname(dirname($_SERVER['SCRIPT_NAME']));
 $url_img = rtrim($base_path, '/') . '/img/';
 $dir_img = dirname(dirname(__FILE__)) . '/img/';
@@ -21,7 +20,7 @@ if (!is_dir($dir_img)) {
           </div>';
 }
 
-if (!file_exists('includes/header.php')) { //
+if (!file_exists('includes/header.php')) { 
     echo '<div style="color: red; font-weight: bold; padding: 20px;">
             Erro: O arquivo includes/header.php não foi encontrado!
             <br>Verifique se a estrutura de diretórios está correta.
@@ -29,67 +28,63 @@ if (!file_exists('includes/header.php')) { //
     exit;
 }
 
-require_once 'includes/header.php'; //
-require_once '../api/v1/config/database.php'; //
+require_once 'includes/header.php'; 
+require_once '../api/v1/config/database.php'; 
 
-if (!file_exists('includes/Arvore.php')) { //
+if (!file_exists('includes/Arvore.php')) { 
     echo '<div class="alert alert-danger">
             Erro: O arquivo includes/Arvore.php não foi encontrado!
             <br>Verifique se a estrutura de diretórios está correta.
           </div>';
-    require_once 'includes/footer.php'; //
+    require_once 'includes/footer.php'; 
     exit;
 }
 
-require_once 'includes/Arvore.php'; //
+require_once 'includes/Arvore.php'; 
 
-// Não precisamos mais buscar biomas aqui para o formulário de árvore
-// $biomasDisponiveis = []; // Removido
 
 try {
     $db = getConnection();
-    $arvores = []; //
+    $arvores = []; 
     
-    if ($db->connect_error) { //
-        throw new Exception("Erro de conexão com o banco: " . $db->connect_error); //
+    if ($db->connect_error) { 
+        throw new Exception("Erro de conexão com o banco: " . $db->connect_error); 
     }
     
-    $arvoreModel = new Arvore($db); //
-    // $biomasDisponiveis = $arvoreModel->listarBiomas(); // Removido
+    $arvoreModel = new Arvore($db); 
     
-    $arvores = $arvoreModel->listarTodas(); //
+    $arvores = $arvoreModel->listarTodas(); 
     
     function ajustarCaminhoImagem($imagem, $url_img_param) {
         if (empty($imagem)) return $url_img_param . 'placeholder.png';
-        if (strpos($imagem, 'http://') === 0 || strpos($imagem, 'https://') === 0) { //
-            return $imagem; //
+        if (strpos($imagem, 'http://') === 0 || strpos($imagem, 'https://') === 0) { 
+            return $imagem; 
         }
-        return $url_img_param . $imagem; //
+        return $url_img_param . $imagem; 
     }
     
     foreach ($arvores as &$arvore_item) {
-        if (isset($arvore_item['imagem'])) { //
-            $arvore_item['imagem'] = ajustarCaminhoImagem($arvore_item['imagem'], $url_img); //
+        if (isset($arvore_item['imagem'])) { 
+            $arvore_item['imagem'] = ajustarCaminhoImagem($arvore_item['imagem'], $url_img); 
         } else {
             $arvore_item['imagem'] = ajustarCaminhoImagem(null, $url_img);
         }
     }
-    unset($arvore_item); //
+    unset($arvore_item); 
     
-    $sucesso = isset($_SESSION['arvore_sucesso']) ? $_SESSION['arvore_sucesso'] : ''; //
-    $erro = isset($_SESSION['arvore_erro']) ? $_SESSION['arvore_erro'] : ''; //
+    $sucesso = isset($_SESSION['arvore_sucesso']) ? $_SESSION['arvore_sucesso'] : ''; 
+    $erro = isset($_SESSION['arvore_erro']) ? $_SESSION['arvore_erro'] : ''; 
     
-    unset($_SESSION['arvore_sucesso']); //
-    unset($_SESSION['arvore_erro']); //
+    unset($_SESSION['arvore_sucesso']); 
+    unset($_SESSION['arvore_erro']); 
 
 } catch (Exception $e) {
     echo '<div class="alert alert-danger">
             Erro: ' . $e->getMessage() . '
-          </div>'; //
-    $arvores = []; //
-    $sucesso = ''; //
+          </div>'; 
+    $arvores = []; 
+    $sucesso = ''; 
     $erro = 'Erro Crítico: ' . $e->getMessage();
-    // $biomasDisponiveis = []; // Removido
 }
 ?>
 
@@ -135,8 +130,8 @@ try {
                             <td><?php echo $arvore['id']; ?></td>
                             <td>
                                 <?php
-                                $imagem_url = htmlspecialchars($arvore['imagem']); //
-                                $imagem_alt = htmlspecialchars($arvore['nome_cientifico']); //
+                                $imagem_url = htmlspecialchars($arvore['imagem']); 
+                                $imagem_alt = htmlspecialchars($arvore['nome_cientifico']); 
                                 ?>
                                 <img src="<?php echo $imagem_url; ?>" alt="<?php echo $imagem_alt; ?>" width="50" height="50" class="img-thumbnail">
                             </td>
@@ -425,7 +420,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalNovaArvore = document.getElementById('modalNovaArvore');
     modalNovaArvore.addEventListener('hidden.bs.modal', function () {
         this.querySelector('form').reset();
-        // Não precisa mais resetar select múltiplo de biomas aqui
     });
 
     const botoesEditar = document.querySelectorAll('.editar-arvore');
@@ -451,7 +445,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         document.getElementById('editar_nomes_populares').value = arvore.nomes_populares ? arvore.nomes_populares.join(', ') : '';
                         
-                        // Biomas (string separada por vírgula)
                         document.getElementById('editar_biomas_nomes_str').value = arvore.biomas_nomes ? arvore.biomas_nomes.join(', ') : '';
 
 
@@ -481,7 +474,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('editar_tipo_medicinal').checked = !!(arvore.tipo_arvore && parseInt(arvore.tipo_arvore.medicinal) === 1);
                         document.getElementById('editar_tipo_toxica').checked = !!(arvore.tipo_arvore && parseInt(arvore.tipo_arvore.toxica) === 1);
 
-                        // Removida a lógica de seleção de biomas do select múltiplo
 
                     } else {
                         alert('Erro ao buscar dados da árvore: ' + (data.mensagem || 'Resposta inválida do servidor. Verifique o console para detalhes.'));
@@ -509,5 +501,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php
-require_once 'includes/footer.php'; //
+require_once 'includes/footer.php'; 
 ?>
