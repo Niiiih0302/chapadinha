@@ -4,29 +4,60 @@
 $itemId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '1'; // ID padrão
 $itemType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : 'arvore'; // Tipo padrão
 
+include '../includes/conexao.php';
+
 // Dados de exemplo - substitua pela sua lógica de banco de dados
 $itemData = [];
 $pageTitle = 'Detalhes do Item';
+$url_img = '/chapadinha/img/';
 
-// Simulação de busca de dados
-// Você usaria o $itemId e $itemType para buscar no banco
 if ($itemType === 'arvore') {
-    // Baseado nos campos da tabela 'arvore' e descrição do usuário
-    $itemData = [
-        'id' => $itemId,
-        'nome_cientifico' => 'Arborea Exemplum ' . $itemId,
-        'nome_popular' => 'Árvore Comum Exemplo',
-        'familia' => 'Familiares Arboris',
-        'genero' => 'Genus Lignum',
-        'curiosidade' => 'Esta árvore é conhecida por sua longevidade e pela beleza de suas flores na primavera. Suas raízes ajudam a estabilizar o solo e suas folhas fornecem sombra refrescante. É uma espécie fundamental para o ecossistema local, servindo de alimento e abrigo para diversas aves e insetos. A madeira já foi muito utilizada na construção civil, mas hoje a espécie é protegida.',
-        'imagem' => '../img/arvore-card.png', // Imagem de exemplo
-        'medidas' => 'Altura média: 12-18m, Diâmetro da copa: 8-12m',
-        'bioma' => 'Cerrado / Mata Atlântica', // Exemplo de bioma
-        'tipo_arvore' => 'Nativa de grande porte' // Exemplo de tipo
-    ];
-    $pageTitle = $itemData['nome_popular'];
-} else if ($itemType === 'cupim') {
-    $itemData = [
+    $stmt = $conn->prepare("
+        SELECT 
+            a.id,
+            a.nome_cientifico,
+            a.familia,
+            a.genero,
+            a.curiosidade,
+            a.imagem,
+            b.nome AS bioma_nome,
+            b.descricao AS bioma_descricao,
+            m.CAP,
+            m.DAP,
+            m.amortizacao,
+            t.exotica_nativa,
+            t.medicinal,
+            t.toxica,
+            GROUP_CONCAT(np.nome SEPARATOR ', ') AS nomes_populares
+        FROM arvore a
+            LEFT JOIN arvore_bioma ab ON ab.fk_arvore = a.id
+            LEFT JOIN bioma b ON b.id = ab.fk_bioma
+            LEFT JOIN medidas m ON m.fk_arvore = a.id
+            LEFT JOIN tipo_arvore t ON t.fk_arvore = a.id
+            LEFT JOIN nome_popular np ON np.fk_arvore = a.id
+        WHERE a.id = ?
+        GROUP BY 
+            a.id, a.nome_cientifico, a.familia, a.genero, a.curiosidade, a.imagem,
+            b.nome, b.descricao,
+            m.CAP, m.DAP, m.amortizacao,
+            t.exotica_nativa, t.medicinal, t.toxica;
+
+    ");
+    $stmt->bind_param("i", $itemId);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $itemData = $resultado->fetch_assoc();
+    if ($itemData) $pageTitle = explode(',', $itemData['nomes_populares'])[0];
+
+    // Variáveis para a exibição do tipo da árvore
+
+    $tipo = ($itemData['exotica_nativa'] == 1) ? "nativa" : "exótica";
+    $medicinal = ($itemData['medicinal'] == 1) ? "medicinal" : "não medicinal";
+    $toxica = ($itemData['toxica'] == 1) ? "tóxica" : "não tóxica";
+
+    $descricao = "Árvore $tipo, $medicinal e $toxica.";
+} elseif ($itemType === 'cupim') {
+     $itemData = [
         'id' => $itemId,
         'nome_cientifico' => 'Termitidae Structuris ' . $itemId,
         'nome_popular' => 'Cupinzeiro da Chapadinha',
@@ -39,8 +70,8 @@ if ($itemType === 'arvore') {
         'importancia_ecologica' => 'Decomposição de matéria orgânica, aeração do solo, fonte de alimento.'
     ];
     $pageTitle = $itemData['nome_popular'];
-} else if ($itemType === 'lago') {
-     $itemData = [
+} elseif ($itemType === 'lago') {
+    $itemData = [
         'id' => $itemId,
         'nome_popular' => 'Lagoa da Chapadinha',
         'descricao_geral' => 'A Lagoa da Chapadinha é um ponto central da vida selvagem local, oferecendo recursos hídricos vitais e um habitat diversificado. Sua conservação é crucial para manter o equilíbrio ecológico da região. Atividades de educação ambiental são frequentemente realizadas em suas margens para conscientizar a população sobre sua importância.',
@@ -52,35 +83,42 @@ if ($itemType === 'arvore') {
     ];
     $pageTitle = $itemData['nome_popular'];
 }
+
+
 // Adicione mais 'else if' para outros tipos de itens (ex: rochas, animais específicos)
 
-include '../includes/head.php'; // Inclui o head padrão
+include '../includes/head.php';
 ?>
 <link rel="stylesheet" href="../Estilos/PaginaDetalhesEstilo.css">
 <title><?php echo htmlspecialchars($pageTitle); ?> - Lagoa da Chapadinha</title>
 
 <body>
-    <?php include '../includes/header.php'; // Inclui o cabeçalho padrão ?>
+    <?php include '../includes/header.php';  ?>
 
     <main class="container my-5">
         <?php if (!empty($itemData)): ?>
             <div class="detalhes-container shadow-lg">
                 <div class="detalhes-imagem-wrapper">
-                    <img src="<?php echo htmlspecialchars($itemData['imagem']); ?>" alt="Imagem de <?php echo htmlspecialchars($pageTitle); ?>" class="img-fluid rounded">
+                    <img src="<?php echo $url_img . $itemData['imagem']; ?>" alt="Imagem de <?php echo htmlspecialchars($pageTitle); ?>" class="img-fluid rounded">
                 </div>
                 <div class="detalhes-info">
                     <h1 class="nome-item mb-3"><?php echo htmlspecialchars($pageTitle); ?></h1>
 
                     <?php if ($itemType === 'arvore'): ?>
                         <p><strong>Nome Científico:</strong> <?php echo htmlspecialchars($itemData['nome_cientifico']); ?></p>
-                        <?php if(isset($itemData['nome_popular']) && $itemData['nome_popular'] !== $pageTitle): ?>
-                            <p><strong>Nome Popular:</strong> <?php echo htmlspecialchars($itemData['nome_popular']); ?></p>
+                        <?php if(isset($itemData['nomes_populares']) /*&& $itemData['nomes_populares'] !== $pageTitle*/ ): ?>
+                            <p><strong>Nomes Populares:</strong> <?php echo htmlspecialchars($itemData['nomes_populares']); ?>.</p>
                         <?php endif; ?>
                         <p><strong>Família:</strong> <?php echo htmlspecialchars($itemData['familia']); ?></p>
                         <p><strong>Gênero:</strong> <?php echo htmlspecialchars($itemData['genero']); ?></p>
-                        <p><strong>Medidas Comuns:</strong> <?php echo htmlspecialchars($itemData['medidas']); ?></p>
-                        <p><strong>Bioma Principal:</strong> <?php echo htmlspecialchars($itemData['bioma']); ?></p>
-                        <p><strong>Tipo de Árvore:</strong> <?php echo htmlspecialchars($itemData['tipo_arvore']); ?></p>
+                        <p><strong>Bioma Principal:</strong> <?php echo htmlspecialchars($itemData['bioma_nome']); ?></p>
+                        <p><strong>Tipo:</strong><?php echo $descricao; ?></p>
+                        <br>
+                        <p><strong>Medidas Comuns:</strong></p>
+                        <p>CAP:<?php echo htmlspecialchars($itemData['CAP']); ?></p>
+                        <p>DAP:<?php echo htmlspecialchars($itemData['DAP']); ?></p>
+                        <p>Amortização de carbono:<?php echo htmlspecialchars($itemData['amortizacao']); ?></p>
+                        <br>
                         <h3 class="mt-4">Curiosidades:</h3>
                         <p class="text-indent"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'])); ?></p>
                     <?php elseif ($itemType === 'cupim'): ?>
