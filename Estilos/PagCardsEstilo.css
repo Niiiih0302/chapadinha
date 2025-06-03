@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Lily+Script+One');
-
 /* Fonte padrão do site */
 body {
   background: #eee;
@@ -9,8 +7,8 @@ body {
 
 /* Apenas para a seção dos cards */
 .cards-section {
-  font-family: 'Lily Script One', cursive;
-  padding: 5vw 2vw;
+  font-family: 'Arial', sans-serif;
+  padding: 2vw 2vw; 
 }
 
 /* Container flexível de cards */
@@ -19,7 +17,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
-  margin-top: 2rem;
+  
 }
 
 /* Card individual responsivo */
@@ -30,7 +28,7 @@ body {
   perspective: 40rem;
   box-sizing: border-box;
   position: relative;
-  display: flex;
+  display: flex; 
 }
 
 /* Conteúdo interno do card */
@@ -39,7 +37,7 @@ body {
   width: 100%;
   height: 100%;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
-  transition: transform 1s;
+  transition: transform 1s; 
   transform-style: preserve-3d;
 }
 
@@ -49,21 +47,88 @@ body {
   height: 100%;
   background: white;
   text-align: center;
-  padding: 1.5rem;
+  padding: 1.5rem; 
   box-sizing: border-box;
   border-radius: 0.75rem;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
+  position: relative; 
+  transition: all 0.3s ease; 
+  border: 1px solid #ddd; 
+}
+
+/* Efeito de hover no card */
+.cards-section .front:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  border-color: #89b6a0; 
 }
 
 /* Imagem no card */
 .cards-section .front img {
-  width: 100%;
-  height: auto;
-  border-radius: 0.5rem;
+  width: 100%; 
+  height: 10rem; 
+  object-fit: cover;
+  border-radius: 0.5rem; 
+  display: block; 
+  margin-bottom: 0.75rem; 
+  border: 1px solid #eee; 
 }
 
 /* Título no card */
 .cards-section .front h3 {
-  margin-top: 1rem;
-  font-size: 1.1rem;
-  color: #333;
+  margin-top: 0.5rem; 
+  font-size: 1.2rem; 
+  color: #4b6043;
+  line-height: 1.2; 
+  font-family: 'Marcellus', serif; 
+  flex-grow: 1; 
+}
+
+/* Parágrafo (nome científico) no card */
+.cards-section .front p {
+    font-size: 0.9em;
+    margin-top: 0.25rem; 
+    color: #777; 
+    font-family: 'Arial', sans-serif;
+}
+
+/* Estilo para o botão "Ver Detalhes" */
+.cards-section .front .btn-card-details {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem; 
+    font-size: 0.95rem; 
+    background-color: #89b6a0;
+    border-color: #89b6a0;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.3rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease; 
+    display: inline-block; 
+    width: auto; 
+}
+
+.cards-section .front .btn-card-details:hover {
+    background-color: #6f9683;
+    border-color: #6f9683;
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+/* Media query para ajustes em telas menores */
+@media (max-width: 576px) {
+    .cards-section .front {
+        padding: 1rem; 
+    }
+    .cards-section .front h3 {
+        font-size: 1.1rem;
+    }
+    .cards-section .front p {
+        font-size: 0.85em;
+    }
+    .cards-section .front .btn-card-details {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
 }

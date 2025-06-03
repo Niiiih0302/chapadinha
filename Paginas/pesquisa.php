@@ -1,94 +1,179 @@
 <?php
+// pesquisa.php
+include '../includes/head.php'; // Para tags <head> e Bootstrap CSS
+include '../includes/conexao.php'; // Para conexão com o banco
 
-include '../api/v1/config/Database.php';
-include '../includes/header.php';
-include '../includes/head.php';
-include '../includes/footer.php';
+$url_img = '/chapadinha/img/'; // Certifique-se que este caminho está correto a partir da raiz do servidor
+$pesquisa = $_GET['BarraPesquisa'] ?? '';
 
-$conn = getConnection();
-
-$pesquisa = $_GET['BarraPesquisa'] ?? '';    //O campo de texto tem o atributo name="q". Isso significa que, quando você envia o formulário, o valor digitado aparece na URL assim:
-
-$query = "
-SELECT 
-    a.id,
-    a.nome_cientifico,
-    a.familia,
-    a.genero,
-    a.curiosidade,
-    a.imagem,
-    np.nome AS nome_popular,
-    b.nome AS bioma,
-    m.CAP,
-    m.DAP,
-    m.amortizacao,
-    t.exotica_nativa,
-    t.medicinal,
-    t.toxica
-FROM arvore a
-LEFT JOIN nome_popular np ON np.fk_arvore = a.id
-LEFT JOIN arvore_bioma ab ON ab.fk_arvore = a.id
-LEFT JOIN bioma b ON b.id = ab.fk_bioma
-LEFT JOIN medidas m ON m.fk_arvore = a.id
-LEFT JOIN tipo_arvore t ON t.fk_arvore = a.id
-WHERE 
-    a.nome_cientifico LIKE ? OR 
-    np.nome LIKE ? OR 
-    a.familia LIKE ? OR 
-    a.genero LIKE ?
-";
-
-$stmt = $conn->prepare($query); //Prepara uma query SQL com placeholders (?) para ser executada depois.
-$like = "%$pesquisa%"; //Cria a string de busca com %, que o LIKE do SQL entende como "qualquer coisa antes ou depois".
-//"ssss" significa que os 4 parâmetros são do tipo string:
-/*s = string
-
-i = integer
-
-d = double
-
-b = blob
-
-Cada $like será associado a um ? na ordem em que aparecem.
-*/
-$stmt->bind_param("ssss", $like, $like, $like, $like); //Esse código é responsável por fazer uma consulta ao banco de dados com segurança, usando prepared statements (declarações preparadas) para evitar SQL Injection
-$stmt->execute(); //Executa a consulta no banco de dados com os valores substituídos nos ?.
-$result = $stmt->get_result(); //Captura o resultado da consulta (como se fosse o mysqli_query tradicional).
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo "<div class='col'>";
-        echo "<div class='card h-100'>";
-        
-        // Imagem
-        if ($row['imagem']) {
-            echo "<img src='../img/" . $row['imagem'] . "' class='card-img-top' alt='Imagem da árvore' style='height: 200px; object-fit: cover;'>";
-        } else {
-            echo "<img src='img/sem-imagem.png' class='card-img-top' alt='Sem imagem' style='height: 200px; object-fit: cover;'>";
-        }
-
-        // Conteúdo do Card
-        echo "<div class='card-body'>";
-        echo "<h5 class='card-title'>" . htmlspecialchars($row['nome_popular'] ?? 'Sem nome popular') . "</h5>";
-        echo "<p class='card-text'><strong>Nome Científico:</strong> " . $row['nome_cientifico'] . "</p>";
-        echo "<p class='card-text'><strong>Família:</strong> " . $row['familia'] . "<br>";
-        echo "<strong>Gênero:</strong> " . $row['genero'] . "<br>";
-        echo "<strong>Bioma:</strong> " . $row['bioma'] . "</p>";
-        echo "<p class='card-text'><strong>Curiosidade:</strong> " . $row['curiosidade'] . "</p>";
-        echo "<p class='card-text'><strong>CAP:</strong> " . $row['CAP'] . " | <strong>DAP:</strong> " . $row['DAP'] . "</p>";
-        echo "<p class='card-text'><strong>Exótica/Nativa:</strong> " . ($row['exotica_nativa'] ? 'Sim' : 'Não') . "<br>";
-        echo "<strong>Medicinal:</strong> " . ($row['medicinal'] ? 'Sim' : 'Não') . "<br>";
-        echo "<strong>Tóxica:</strong> " . ($row['toxica'] ? 'Sim' : 'Não') . "</p>";
-        echo "<a href='#' class='btn btn-outline-success'>Ver mais</a>";
-        echo "</div>"; // card-body
-        echo "</div>"; // card
-        echo "</div>"; // col
+?>
+<link rel="stylesheet" href="../Estilos/PagCardsEstilo.css"> <title>Resultados da Pesquisa - Lagoa da Chapadinha</title>
+<style>
+    .search-results-title {
+        font-family: 'Marcellus', serif;
+        color: #4b6043;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2.2rem;
     }
-} else {
-    echo "<p>Nenhum resultado encontrado para '<strong>" . htmlspecialchars($pesquisa) . "</strong>'.</p>";
-}
+    .back-to-catalog-container {
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    .suggestion-title {
+        font-family: 'Quicksand', sans-serif;
+        color: #555;
+        text-align: center;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+</style>
 
-$conn->close();
+<body>
+<?php 
+include '../includes/header.php'; // Inclui o cabeçalho padrão
 ?>
 
+<main class="container my-5">
+    <h2 class="search-results-title">
+        Resultados da Pesquisa para: "<?php echo htmlspecialchars($pesquisa); ?>"
+    </h2>
 
+    <div class="cards-section">
+        <div class="card-container">
+            <?php
+            $resultados_encontrados_direto = false;
+            $sugestoes_encontradas = false;
+
+            if (!empty($pesquisa)) {
+                
+                $query_like = "
+                SELECT 
+                    a.id,
+                    a.nome_cientifico,
+                    a.familia,
+                    a.genero,
+                    a.curiosidade,
+                    a.imagem,
+                    GROUP_CONCAT(DISTINCT np.nome SEPARATOR ', ') AS nomes_populares,
+                    b.nome AS bioma
+                FROM arvore a
+                LEFT JOIN nome_popular np ON np.fk_arvore = a.id
+                LEFT JOIN arvore_bioma ab ON ab.fk_arvore = a.id
+                LEFT JOIN bioma b ON b.id = ab.fk_bioma
+                WHERE 
+                    a.nome_cientifico LIKE ? OR 
+                    np.nome LIKE ? OR 
+                    a.familia LIKE ? OR 
+                    a.genero LIKE ?
+                GROUP BY a.id
+                ORDER BY a.nome_cientifico";
+
+                $stmt_like = $conn->prepare($query_like);
+                $like_term = "%$pesquisa%";
+                $stmt_like->bind_param("ssss", $like_term, $like_term, $like_term, $like_term);
+                $stmt_like->execute();
+                $result_like = $stmt_like->get_result();
+
+                if ($result_like->num_rows > 0) {
+                    $resultados_encontrados_direto = true;
+                    while ($row = $result_like->fetch_assoc()) {
+                        $nome_exibicao = !empty($row['nomes_populares']) ? explode(',', $row['nomes_populares'])[0] : $row['nome_cientifico'];
+            ?>
+                        <div class="card">
+                            <div class="content">
+                                <div class="front">
+                                    <a href="PaginaDetalhes.php?type=arvore&id=<?php echo htmlspecialchars($row['id']); ?>" style="text-decoration: none; color: inherit;">
+                                        <img src="<?php echo $url_img . (!empty($row['imagem']) ? htmlspecialchars($row['imagem']) : 'sem-imagem.png'); ?>" alt="<?php echo htmlspecialchars($nome_exibicao); ?>">
+                                        <h3><?php echo htmlspecialchars($nome_exibicao); ?></h3>
+                                        <?php if ($nome_exibicao != $row['nome_cientifico'] && !empty($row['nome_cientifico'])): ?>
+                                            <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($row['nome_cientifico']); ?></em></p>
+                                        <?php endif; ?>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+            <?php
+                    }
+                }
+                $stmt_like->close();
+
+                // Se não houver resultados diretos, tentar busca fonética
+                if (!$resultados_encontrados_direto) {
+                    echo "<p class='text-center w-100'>Nenhum resultado direto encontrado para '<strong>" . htmlspecialchars($pesquisa) . "</strong>'.</p>";
+
+                    
+                    if (str_word_count($pesquisa) <= 3) { 
+                        $query_soundex = "
+                            SELECT 
+                                a.id, a.nome_cientifico, a.imagem,
+                                GROUP_CONCAT(DISTINCT np.nome SEPARATOR ', ') AS nomes_populares
+                            FROM arvore a
+                            LEFT JOIN nome_popular np ON np.fk_arvore = a.id
+                            WHERE SOUNDEX(a.nome_cientifico) = SOUNDEX(?) OR SOUNDEX(np.nome) = SOUNDEX(?)
+                            GROUP BY a.id
+                            LIMIT 3"; // Limitar o número de sugestões fonéticas
+
+                        $stmt_soundex = $conn->prepare($query_soundex);
+                        if ($stmt_soundex) {
+                            $stmt_soundex->bind_param("ss", $pesquisa, $pesquisa);
+                            $stmt_soundex->execute();
+                            $result_soundex = $stmt_soundex->get_result();
+
+                            if ($result_soundex->num_rows > 0) {
+                                $sugestoes_encontradas = true;
+                                echo "<h4 class='suggestion-title w-100'>Talvez você quis dizer:</h4>";
+                                while ($row_soundex = $result_soundex->fetch_assoc()) {
+                                    $nome_exibicao_soundex = !empty($row_soundex['nomes_populares']) ? explode(',', $row_soundex['nomes_populares'])[0] : $row_soundex['nome_cientifico'];
+            ?>
+                                    <div class="card">
+                                        <div class="content">
+                                            <div class="front">
+                                                <a href="PaginaDetalhes.php?type=arvore&id=<?php echo htmlspecialchars($row_soundex['id']); ?>" style="text-decoration: none; color: inherit;">
+                                                    <img src="<?php echo $url_img . (!empty($row_soundex['imagem']) ? htmlspecialchars($row_soundex['imagem']) : 'sem-imagem.png'); ?>" alt="<?php echo htmlspecialchars($nome_exibicao_soundex); ?>">
+                                                    <h3><?php echo htmlspecialchars($nome_exibicao_soundex); ?></h3>
+                                                    <?php if ($nome_exibicao_soundex != $row_soundex['nome_cientifico'] && !empty($row_soundex['nome_cientifico'])): ?>
+                                                        <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($row_soundex['nome_cientifico']); ?></em></p>
+                                                    <?php endif; ?>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+            <?php
+                                }
+                            }
+                            $stmt_soundex->close();
+                        }
+                    }
+                }
+                // Se, mesmo após a busca fonética (se aplicável), nada foi encontrado no geral
+                if (!$resultados_encontrados_direto && !$sugestoes_encontradas) {
+                  
+                }
+
+
+            } else { 
+                echo "<p class='text-center w-100'>Por favor, digite um termo para pesquisar.</p>";
+            }
+            ?>
+        </div> </div> <div class="back-to-catalog-container">
+        <a href="PaginaCards.php" class="btn btn-outline-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+            </svg>
+            Voltar ao Catálogo
+        </a>
+    </div>
+
+</main>
+
+<?php 
+if (isset($conn)) { 
+    $conn->close();
+}
+include '../includes/footer.php';  
+?>
+</body>
+</html>

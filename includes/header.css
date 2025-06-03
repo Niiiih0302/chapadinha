@@ -1,4 +1,4 @@
-/* chapadinha/includes/header.css - Com Header Fixo */
+/* chapadinha/includes/header.css - Com Header Fixo Aprimorado */
 @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Quicksand:wght@400;600&display=swap');
 
 /* 1. Reset Básico e Body */
@@ -10,23 +10,22 @@
 
 body {
   font-family: 'Quicksand', sans-serif;
-  background-color: #f4f1ee; /* */
-  padding-top: 5.5rem;
-  
+  background-color: #f4f1ee;
+  padding-top: 5.5rem; 
 }
 
 /* 2. Estilos do Header Principal (.site-header) */
 body .site-header {
-  background-color: #89b6a0; /* */
-  padding-top: 0.8rem;
-  padding-bottom: 0.8rem;
+  background-color: #7AA891; 
+  padding-top: 1rem; 
+  padding-bottom: 1rem; 
   position: fixed;
   top: 0;
   left: 0;
   width: 100%; 
-  z-index: 1000; /* */
-  border-bottom: 2px solid #6f9683; /* */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* */
+  z-index: 1000;
+  border-bottom: none; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
 }
 
 /* 3. Container Principal (para centralizar e limitar a largura) */
@@ -35,120 +34,127 @@ body .site-header .container {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.5rem; 
+  padding-right: 1.5rem; 
 }
 
 /* 4. Conteúdo do Header (o container flex Pai) */
 body .site-header .header-content {
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: space-between;
 }
 
 /* 5. Container do Logo (Filho Flex) */
 body .site-header .logo-container {
   display: flex;
   align-items: center;
-  gap: 0.8rem; /* */
+  gap: 1rem; 
   flex-shrink: 0;
 }
 
 body .site-header .logo-image {
-  height: 3rem; /* */
+  height: 3.5rem; 
   width: auto;
-  object-fit: contain; /* */
+  object-fit: contain;
   display: block;
+  filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3)); 
 }
 
 body .site-header .logo-text {
-  font-family: 'Marcellus', serif; /* */
-  color: #4b6043; /* */
-  font-size: 1.3rem; /* */
-  font-weight: 700; /* */
-  letter-spacing: 1px; /* */
-  white-space: nowrap; /* */
+  font-family: 'Marcellus', serif;
+  color: #F8F9FA; 
+  font-size: 1.5rem; 
+  font-weight: 700;
+  letter-spacing: 1.5px; 
+  white-space: nowrap;
   line-height: 1;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5); 
 }
 
 /* 6. Menu de Navegação (Filho Flex) */
 body .site-header .nav-menu {
   display: flex;
   align-items: center;
-  margin-left: auto; 
+  gap: 1.5rem; 
   flex-shrink: 0;
 }
 
 body .site-header .nav-menu a {
   position: relative;
   text-decoration: none;
-  color: #4b6043; /* */
-  font-weight: 600; /* */
-  font-size: 1rem; /* */
-  padding: 0.3rem 0.75rem;
-  transition: color 0.3s ease; /* */
-  white-space: nowrap; /* */
+  color: #F8F9FA; 
+  font-weight: 600;
+  font-size: 1.05rem; 
+  padding: 0.5rem 0.75rem; 
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease; 
+  white-space: nowrap;
   line-height: 1;
+  border-radius: 5px; 
 }
 
 /* Efeito de sublinhado para os links do menu */
 body .site-header .nav-menu a::after {
   content: '';
-  position: absolute; /* */
-  left: 0.75rem;
-  right: 0.75rem;
-  bottom: -3px; /* */
-  width: calc(100% - 1.5rem);
-  max-width: 0;
-  height: 2px; /* */
-  background-color: #4b6043; /* */
-  transition: max-width 0.3s ease; /* */
-  border-radius: 2px; /* */
+  position: absolute;
+  left: 50%; 
+  transform: translateX(-50%); 
+  bottom: -5px; 
+  width: 0; 
+  height: 2px;
+  background-color: #CCE3D0; 
+  transition: width 0.3s ease; 
+  border-radius: 2px;
 }
 
 body .site-header .nav-menu a:hover::after,
 body .site-header .nav-menu a.active::after {
-  max-width: calc(100% - 1.5rem); /* */
+  width: calc(100% - 1.5rem); 
+}
+
+body .site-header .nav-menu a:hover {
+    color: #CCE3D0; 
+    transform: translateY(-2px); 
 }
 
 /* 7. Ajustes para Telas Menores (Mobile) */
 @media (max-width: 768px) {
   body .site-header .header-content {
-    flex-direction: column; /* */
-    align-items: flex-start; /* */
-    gap: 1rem; /* */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem; 
   }
 
   body .site-header .logo-image {
-    height: 2.5rem; /* */
+    height: 3rem; 
   }
   
   body .site-header .logo-text {
-    font-size: 1.2rem;
+    font-size: 1.3rem; 
   }
 
   body .site-header .nav-menu {
     margin-left: 0;
-    flex-direction: column; /* */
+    flex-direction: column;
     align-items: flex-start;
-    width: 100%; /* */
+    width: 100%;
     gap: 0;
   }
 
   body .site-header .nav-menu a {
-    padding: 0.6rem 0;
+    padding: 0.5rem 0; 
     width: 100%;
   }
 
   body .site-header .nav-menu a::after {
     left: 0;
-    right: auto;
+    transform: translateX(0);
     width: 0;
     max-width: 0;
   }
   body .site-header .nav-menu a:hover::after,
   body .site-header .nav-menu a.active::after {
-     width: 50px;
+     width: 50px; 
      max-width: 50px;
   }
 }
