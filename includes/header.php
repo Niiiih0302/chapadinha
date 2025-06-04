@@ -6,8 +6,8 @@
   <div class="container">
     <div class="header-content">
       <div class="logo-container">
-        <img src="../img/logoFatec.png" alt="Logo Fatec" class="logo-image">
-        <div class="logo-text">Lagoa da Chapadinha</div>
+        <a href="/chapadinha/Paginas/SobreNos.php#sobre-fatec"><img src="../img/logoFatec.png" alt="Logo Fatec" class="logo-image"></a>
+        <div class="logo-text"><a href="index.php">Lagoa da Chapadinha</a></div>
       </div>
       
       <nav class="nav-menu">

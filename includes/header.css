@@ -53,6 +53,11 @@ body .site-header .logo-container {
   flex-shrink: 0;
 }
 
+body .site-header .logo-text a {
+  color: #F8F9FA;
+  text-decoration: none; 
+}
+
 body .site-header .logo-image {
   height: 3.5rem; 
   width: auto;
@@ -157,4 +162,6 @@ body .site-header .nav-menu a:hover {
      width: 50px; 
      max-width: 50px;
   }
+
 }
+

@@ -39,8 +39,8 @@
                     ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeNathanLucasDePaulaVieira.jpg"],
                     ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeRenanDeCastro.png"],
                     ["nome" => "Juliane Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg"],
-                    ["nome" => "Maria Clara Chiromito Tronbeta", "funcao" => "Desenvolvedor(a) Backend", "foto" => ""],
-                    ["nome" => "Naiane Rivia Dd Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "foto" => ""],
+                    ["nome" => "Maria Clara Chiromito Tronbeta", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeMariaClara.png"],
+                    ["nome" => "Naiane Rivia Dd Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeNaiane.png"],
                     ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) full stack", "foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg"],
                 ];
 
