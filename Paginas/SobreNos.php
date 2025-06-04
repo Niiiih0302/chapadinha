@@ -24,7 +24,7 @@
                 <p>Este projeto é um exemplo do conhecimento aplicado e da dedicação dos alunos da Fatec Itapetininga (ou a unidade correspondente), desenvolvido como parte fundamental de suas atividades acadêmicas, demonstrando na prática as competências adquiridas ao longo do curso.</p>
                 <p><strong>Quer transformar seu futuro com uma educação de ponta e foco no mercado?</strong></p>
                 <p>Descubra os cursos oferecidos e prepare-se para uma carreira de sucesso. Visite o site oficial para mais informações sobre o processo seletivo e como se inscrever!</p>
-                <a href="https://www.vestibularfatec.com.br/" class="btn btn-success btn-lg mt-3" target="_blank">Inscreva-se na Fatec!</a>
+                <a href="https://fatecitapetininga.edu.br/" class="btn btn-success btn-lg mt-3" target="_blank">Inscreva-se na Fatec!</a>
             </div>
         </section>
 
@@ -38,10 +38,10 @@
                     ["nome" => "Marcos Siqueira Santos", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeMarcosSiqueiraSantos.png"],
                     ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeNathanLucasDePaulaVieira.jpg"],
                     ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeRenanDeCastro.png"],
-                    ["nome" => "Juliane Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg"],
-                    ["nome" => "Maria Clara Chiromito Tronbeta", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeMariaClara.png"],
-                    ["nome" => "Naiane Rivia Dd Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeNaiane.png"],
-                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) full stack", "foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg"],
+                    ["nome" => "Julianne Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg"],
+                    ["nome" => "Maria Clara Chiromito Trombeta", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeMariaClara.png"],
+                    ["nome" => "Naiane Rivia De Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeNaiane.png"],
+                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg"],
                 ];
 
                 foreach ($integrantes as $integrante) {
