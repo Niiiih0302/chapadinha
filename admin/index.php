@@ -65,7 +65,7 @@ unset($_SESSION['login_erro']); // Limpa a mensagem de erro
                 </div>
             </form>
             <div class="mt-3 text-center">
-                <a href="../index.php">Voltar para o site</a>
+                <a href="../Paginas/index.php">Voltar para o site</a>
             </div>
         </div>
     </div>

@@ -34,14 +34,14 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <?php
                 $integrantes = [
-                    ["nome" => "Luiz Guilherme de Queiroz Soares", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "../img/placeholder-usuario.png"],
-                    ["nome" => "Marcos Siqueira Santos", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "../img/placeholder-usuario.png"],
-                    ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "../img/placeholder-usuario.png"],
-                    ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "../img/placeholder-usuario.png"],
-                    ["nome" => "Juliane Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "foto" => "../img/placeholder-usuario.png"],
-                    ["nome" => "Maria Clara Chiromito Tronbeta", "funcao" => "Desenvolvedor(a) Backend", "foto" => "../img/placeholder-usuario.png"],
-                    ["nome" => "NaianeE Rivia Dd Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "foto" => "../img/placeholder-usuario.png"],
-                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) full stack", "foto" => "../img/placeholder-usuario.png"],
+                    ["nome" => "Luiz Guilherme de Queiroz Soares", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeLuizGuilhermeDeQueiroz.png"],
+                    ["nome" => "Marcos Siqueira Santos", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeMarcosSiqueiraSantos.png"],
+                    ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeNathanLucasDePaulaVieira.jpg"],
+                    ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeRenanDeCastro.png"],
+                    ["nome" => "Juliane Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg"],
+                    ["nome" => "Maria Clara Chiromito Tronbeta", "funcao" => "Desenvolvedor(a) Backend", "foto" => ""],
+                    ["nome" => "Naiane Rivia Dd Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "foto" => ""],
+                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) full stack", "foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg"],
                 ];
 
                 foreach ($integrantes as $integrante) {
