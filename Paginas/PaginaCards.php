@@ -212,8 +212,9 @@ switch ($tipo_filtro) {
     <div class="container mb-4 text-center filter-buttons">
         <a href="PaginaCards.php?tipo=todos" class="btn <?php echo ($tipo_filtro == 'todos' ? 'btn-success' : 'btn-outline-success'); ?>">Todos</a>
         <a href="PaginaCards.php?tipo=arvore" class="btn <?php echo ($tipo_filtro == 'arvore' ? 'btn-success' : 'btn-outline-success'); ?>">Árvores</a>
-        <a href="PaginaCards.php?tipo=cupim" class="btn <?php echo ($tipo_filtro == 'cupim' ? 'btn-warning text-dark' : 'btn-outline-warning text-dark'); ?>">Cupinzeiros</a>
         <a href="PaginaCards.php?tipo=lago" class="btn <?php echo ($tipo_filtro == 'lago' ? 'btn-info text-dark' : 'btn-outline-info text-dark'); ?>">Lagoa</a>
+        <a href="PaginaCards.php?tipo=cupim" class="btn <?php echo ($tipo_filtro == 'cupim' ? 'btn-warning text-dark' : 'btn-outline-warning text-dark'); ?>">Cupinzeiros</a>
+        
     </div>
     
     <div class="cards-section">

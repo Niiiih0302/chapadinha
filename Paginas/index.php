@@ -191,7 +191,7 @@
           <div class="card-body">
             <h5 class="card-title" style="font-family: 'Marcellus', serif; color: #6f9683;">O Ecossistema Aquático</h5>
             <p class="card-text">Conheça mais sobre a Lagoa, sua fauna, flora e importância ecológica.</p>
-            <a href="../Paginas/PaginaCards.php?type=lago" class="btn btn-outline-primary">Ver Lagoa</a>
+            <a href="../Paginas/PaginaCards.php?tipo=lago" class="btn btn-outline-primary">Ver Lagoa</a>
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@
           <div class="card-body">
             <h5 class="card-title" style="font-family: 'Marcellus', serif; color: #6f9683;">Os Cupinzeiros</h5>
             <p class="card-text">Entenda a importância dos cupinzeiros e sua contribuição para o solo e o ambiente.</p>
-            <a href="../Paginas/PaginaCards.php?type=cupim" class="btn btn-outline-primary">Ver Cupinzeiros</a>
+            <a href="../Paginas/PaginaCards.php?tipo=cupim" class="btn btn-outline-primary">Ver Cupinzeiros</a>
           </div>
         </div>
       </div>
