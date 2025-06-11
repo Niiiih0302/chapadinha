@@ -46,13 +46,13 @@ class Arvore {
                     $arvore['biomas_nomes'][] = $row_bn['nome'];
                 }
 
-                $query_medidas = "SELECT CAP, DAP, armotizacao FROM medidas WHERE fk_arvore = '$id' LIMIT 1";
+                $query_medidas = "SELECT CAP, DAP, amortizacao FROM medidas WHERE fk_arvore = '$id' LIMIT 1";
                 $result_medidas = $this->conn->query($query_medidas);
                 if (!$result_medidas) throw new Exception("Erro ao buscar medidas: " . $this->conn->error);
                 if ($result_medidas->num_rows > 0) {
                     $arvore['medidas'] = $result_medidas->fetch_assoc();
                 } else {
-                    $arvore['medidas'] = ['CAP' => null, 'DAP' => null, 'armotizacao' => null];
+                    $arvore['medidas'] = ['CAP' => null, 'DAP' => null, 'amortizacao' => null];
                 }
 
                 $query_tipo = "SELECT exotica_nativa, medicinal, toxica FROM tipo_arvore WHERE fk_arvore = '$id' LIMIT 1";
@@ -174,15 +174,15 @@ class Arvore {
             if (isset($dados['medidas'])) {
                 $cap = isset($dados['medidas']['CAP']) && $dados['medidas']['CAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['CAP']) : null;
                 $dap = isset($dados['medidas']['DAP']) && $dados['medidas']['DAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['DAP']) : null;
-                $armotizacao = isset($dados['medidas']['armotizacao']) && $dados['medidas']['armotizacao'] !== '' ? $this->conn->real_escape_string($dados['medidas']['armotizacao']) : null;
+                $amortizacao = isset($dados['medidas']['amortizacao']) && $dados['medidas']['amortizacao'] !== '' ? $this->conn->real_escape_string($dados['medidas']['amortizacao']) : null;
 
-                if ($cap !== null || $dap !== null || $armotizacao !== null) {
+                if ($cap !== null || $dap !== null || $amortizacao !== null) {
                     $cap_sql = $cap !== null ? "'$cap'" : "NULL";
                     $dap_sql = $dap !== null ? "'$dap'" : "NULL";
-                    $armotizacao_sql = $armotizacao !== null ? "'$armotizacao'" : "NULL";
+                    $amortizacao_sql = $amortizacao !== null ? "'$amortizacao'" : "NULL";
 
-                    $query_medidas = "INSERT INTO medidas (fk_arvore, CAP, DAP, armotizacao) 
-                                      VALUES ('$id_arvore', $cap_sql, $dap_sql, $armotizacao_sql)";
+                    $query_medidas = "INSERT INTO medidas (fk_arvore, CAP, DAP, amortizacao) 
+                                      VALUES ('$id_arvore', $cap_sql, $dap_sql, $amortizacao_sql)";
                     if (!$this->conn->query($query_medidas)) throw new Exception("Erro ao inserir medidas: " . $this->conn->error);
                 }
             }
@@ -280,14 +280,14 @@ class Arvore {
             if (isset($dados['medidas'])) {
                 $cap = isset($dados['medidas']['CAP']) && $dados['medidas']['CAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['CAP']) : null;
                 $dap = isset($dados['medidas']['DAP']) && $dados['medidas']['DAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['DAP']) : null;
-                $armotizacao = isset($dados['medidas']['armotizacao']) && $dados['medidas']['armotizacao'] !== '' ? $this->conn->real_escape_string($dados['medidas']['armotizacao']) : null;
+                $amortizacao = isset($dados['medidas']['amortizacao']) && $dados['medidas']['amortizacao'] !== '' ? $this->conn->real_escape_string($dados['medidas']['amortizacao']) : null;
 
-                if ($cap !== null || $dap !== null || $armotizacao !== null) {
+                if ($cap !== null || $dap !== null || $amortizacao !== null) {
                     $cap_sql = $cap !== null ? "'$cap'" : "NULL";
                     $dap_sql = $dap !== null ? "'$dap'" : "NULL";
-                    $armotizacao_sql = $armotizacao !== null ? "'$armotizacao'" : "NULL";
-                    $query_medidas = "INSERT INTO medidas (fk_arvore, CAP, DAP, armotizacao) 
-                                      VALUES ('$id_arvore', $cap_sql, $dap_sql, $armotizacao_sql)";
+                    $amortizacao_sql = $amortizacao !== null ? "'$amortizacao'" : "NULL";
+                    $query_medidas = "INSERT INTO medidas (fk_arvore, CAP, DAP, amortizacao) 
+                                      VALUES ('$id_arvore', $cap_sql, $dap_sql, $amortizacao_sql)";
                     if (!$this->conn->query($query_medidas)) throw new Exception("Erro ao inserir novas medidas: " . $this->conn->error);
                 }
             }

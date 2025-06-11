@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $dados_arvore['medidas'] = [
                     'CAP' => !empty($_POST['medidas']['CAP']) ? $_POST['medidas']['CAP'] : null,
                     'DAP' => !empty($_POST['medidas']['DAP']) ? $_POST['medidas']['DAP'] : null,
-                    'armotizacao' => !empty($_POST['medidas']['armotizacao']) ? $_POST['medidas']['armotizacao'] : null
+                    'amortizacao' => !empty($_POST['medidas']['amortizacao']) ? $_POST['medidas']['amortizacao'] : null
                 ];
 
                 $dados_arvore['tipo_arvore'] = [

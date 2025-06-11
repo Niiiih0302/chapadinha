@@ -23,7 +23,7 @@ if ($itemType === 'arvore') {
             a.imagem,
             m.CAP,
             m.DAP,
-            m.armotizacao, -- CORRIGIDO AQUI: de 'amortizacao' para 'armotizacao'
+            m.amortizacao, -- CORRIGIDO AQUI: de 'amortizacao' para 'amortizacao'
             t.exotica_nativa,
             t.medicinal,
             t.toxica
@@ -151,7 +151,7 @@ include '../includes/head.php';
                         <p><strong>Medidas Comuns:</strong></p>
                         <p>CAP: <?php echo htmlspecialchars($itemData['CAP'] ?? 'N/A'); ?></p>
                         <p>DAP: <?php echo htmlspecialchars($itemData['DAP'] ?? 'N/A'); ?></p>
-                        <p>Amortização de carbono: <?php echo htmlspecialchars($itemData['armotizacao'] ?? 'N/A'); ?></p>
+                        <p>Amortização de carbono: <?php echo htmlspecialchars($itemData['amortizacao'] ?? 'N/A'); ?></p>
                         <br>
                         <h3 class="mt-4">Curiosidades:</h3>
                         <p class="text-indent"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'] ?? 'Nenhuma curiosidade informada.')); ?></p>

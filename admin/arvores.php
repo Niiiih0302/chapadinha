@@ -224,8 +224,8 @@ try {
                             <input type="number" step="0.01" class="form-control" id="medidas_DAP" name="medidas[DAP]" placeholder="Ex: 15.2">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="medidas_armotizacao" class="form-label">Amortização</label>
-                            <input type="text" class="form-control" id="medidas_armotizacao" name="medidas[armotizacao]" placeholder="Ex: Baixa">
+                            <label for="medidas_amortizacao" class="form-label">Amortização</label>
+                            <input type="text" class="form-control" id="medidas_amortizacao" name="medidas[amortizacao]" placeholder="Ex: Baixa">
                         </div>
                     </div>
 
@@ -339,8 +339,8 @@ try {
                             <input type="number" step="0.01" class="form-control" id="editar_medidas_DAP" name="medidas[DAP]">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="editar_medidas_armotizacao" class="form-label">Amortização</label>
-                            <input type="text" class="form-control" id="editar_medidas_armotizacao" name="medidas[armotizacao]">
+                            <label for="editar_medidas_amortizacao" class="form-label">Amortização</label>
+                            <input type="text" class="form-control" id="editar_medidas_amortizacao" name="medidas[amortizacao]">
                         </div>
                     </div>
 
@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         document.getElementById('editar_medidas_CAP').value = arvore.medidas && arvore.medidas.CAP !== null ? arvore.medidas.CAP : '';
                         document.getElementById('editar_medidas_DAP').value = arvore.medidas && arvore.medidas.DAP !== null ? arvore.medidas.DAP : '';
-                        document.getElementById('editar_medidas_armotizacao').value = arvore.medidas && arvore.medidas.armotizacao !== null ? arvore.medidas.armotizacao : '';
+                        document.getElementById('editar_medidas_amortizacao').value = arvore.medidas && arvore.medidas.amortizacao !== null ? arvore.medidas.amortizacao : '';
 
                         document.getElementById('editar_tipo_exotica_nativa').value = arvore.tipo_arvore && arvore.tipo_arvore.exotica_nativa !== null ? arvore.tipo_arvore.exotica_nativa : '';
                         document.getElementById('editar_tipo_medicinal').checked = !!(arvore.tipo_arvore && parseInt(arvore.tipo_arvore.medicinal) === 1);
