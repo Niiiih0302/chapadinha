@@ -34,14 +34,14 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <?php
                 $integrantes = [
-                    ["nome" => "Luiz Guilherme de Queiroz Soares", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeLuizGuilhermeDeQueiroz.png"],
-                    ["nome" => "Marcos Siqueira Santos", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeMarcosSiqueiraSantos.png"],
-                    ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeNathanLucasDePaulaVieira.jpg"],
-                    ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "foto" => "..\img\FotoDev\FotoDeRenanDeCastro.png"],
-                    ["nome" => "Julianne Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg"],
-                    ["nome" => "Maria Clara Chiromito Trombeta", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeMariaClara.png"],
-                    ["nome" => "Naiane Rivia De Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeNaiane.png"],
-                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) Backend", "foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg"],
+                    ["nome" => "Luiz Guilherme de Queiroz Soares", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png", "github" => "LuizGQS", "foto" => "..\img\FotoDev\FotoDeLuizGuilhermeDeQueiroz.png", "link" => "https://github.com/LuizGQS"],
+                    ["nome" => "Marcos Siqueira Santos", "funcao" => "Desenvolvedor(a) Frontend","icone" => "..\img\github-logo.png", "github" => "MarcosSiqueiraSantos" ,"foto" => "..\img\FotoDev\FotoDeMarcosSiqueiraSantos.png", "link" => "https://github.com/MarcosSiqueiraSantos"],
+                    ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png" ,"github" => "NathanLucasVieira", "foto" => "..\img\FotoDev\FotoDeNathanLucasDePaulaVieira.jpg", "link" => "https://github.com/NathanLucasVieira"],
+                    ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png", "github" => "zCastroz" ,"foto" => "..\img\FotoDev\FotoDeRenanDeCastro.png", "link" => "https://github.com/zCastroz"],
+                    ["nome" => "Julianne Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "icone" => "..\img\github-logo.png", "github" => "Julianne-Barbosa","foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg", "link" => "https://github.com/Julianne-Barbosa"],
+                    ["nome" => "Maria Clara Chiromito Trombeta", "funcao" => "Desenvolvedor(a) Backend","icone" => "..\img\github-logo.png", "github" => "mariachiromito" ,"foto" => "..\img\FotoDev\FotoDeMariaClara.png", "link" => "https://github.com/mariachiromito"],
+                    ["nome" => "Naiane Rivia De Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend","icone" => "..\img\github-logo.png", "github" => "Naiane20Oliveira" ,"foto" => "..\img\FotoDev\FotoDeNaiane.png", "link" => "https://github.com/Naiane20Oliveira"],
+                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) Backend","icone" => "..\img\github-logo.png", "github" => "Niiiih0302" ,"foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg", "link" => "https://github.com/Niiiih0302"],
                 ];
 
                 foreach ($integrantes as $integrante) {
@@ -52,7 +52,12 @@
                             <div class="card-body">
                                 <h5 class="card-title integrante-nome"><?php echo htmlspecialchars($integrante['nome']); ?></h5>
                                 <p class="card-text integrante-funcao"><?php echo htmlspecialchars($integrante['funcao']); ?></p>
-                                </div>
+                                
+                                    <a id = "link-github" href = "<?php echo htmlspecialchars($integrante['link']); ?>">
+                                    <img src="<?php echo htmlspecialchars($integrante['icone']); ?>" class="card-img-top integrante-icone" alt="Foto de <?php echo htmlspecialchars($integrante['github']); ?>">
+                                    <p class="card-text integrante-github"><?php echo htmlspecialchars($integrante['github']); ?></p>
+                                    </a>
+                            </div>
                         </div>
                     </div>
                 <?php
