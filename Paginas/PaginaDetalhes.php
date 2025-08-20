@@ -84,16 +84,14 @@ if ($itemType === 'arvore') {
         } else {
             $tipo = "Não informado";
         }
-        
+
         $medicinal = (isset($itemData['medicinal']) && $itemData['medicinal'] == 1) ? "medicinal" : "não medicinal";
         $toxica = (isset($itemData['toxica']) && $itemData['toxica'] == 1) ? "tóxica" : "não tóxica";
 
         $descricao = "Árvore $tipo, $medicinal e $toxica.";
-
     }
-
 } elseif ($itemType === 'cupim') {
-     $itemData = [
+    $itemData = [
         'id' => $itemId,
         'nome_cientifico' => 'Termitidae Structuris',
         'nome_popular' => 'Cupinzeiro da Chapadinha',
@@ -135,65 +133,47 @@ include '../includes/head.php';
                 <div class="detalhes-imagem-wrapper">
                     <img src="<?php echo $url_img . $itemData['imagem']; ?>" alt="Imagem de <?php echo htmlspecialchars($pageTitle); ?>" class="img-fluid rounded">
                 </div>
-                <div class="detalhes-info">
+
+                <div class="detalhes-curiosidades">
                     <h1 class="nome-item mb-3"><?php echo htmlspecialchars($pageTitle); ?></h1>
-
-                    <?php if ($itemType === 'arvore'): ?>
-                        <p><strong>Nome Científico:</strong> <?php echo htmlspecialchars($itemData['nome_cientifico']); ?></p>
-                        <?php if(!empty($itemData['nomes_populares'])): ?>
-                            <p><strong>Nomes Populares:</strong> <?php echo htmlspecialchars($itemData['nomes_populares']); ?>.</p>
-                        <?php endif; ?>
-                        <p><strong>Família:</strong> <?php echo htmlspecialchars($itemData['familia'] ?? 'N/A'); ?></p>
-                        <p><strong>Gênero:</strong> <?php echo htmlspecialchars($itemData['genero'] ?? 'N/A'); ?></p>
-                        <p><strong>Biomas:</strong> <?php echo htmlspecialchars($itemData['biomas_nomes'] ?? 'N/A'); ?></p>
-                        <p><strong>Tipo:</strong> <?php echo $descricao; ?></p>
-                        <br>
-                        <p><strong>Medidas Comuns:</strong></p>
-                        <p>CAP: <?php echo htmlspecialchars($itemData['CAP'] ?? 'N/A'); ?></p>
-                        <p>DAP: <?php echo htmlspecialchars($itemData['DAP'] ?? 'N/A'); ?></p>
-                        <p>Amortização de carbono: <?php echo htmlspecialchars($itemData['amortizacao'] ?? 'N/A'); ?></p>
-                        <br>
-                        <h3 class="mt-4">Curiosidades:</h3>
-                        <p class="text-indent"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'] ?? 'Nenhuma curiosidade informada.')); ?></p>
-                    <?php elseif ($itemType === 'cupim'): ?>
-                        <p><strong>Nome Científico:</strong> <?php echo htmlspecialchars($itemData['nome_cientifico']); ?></p>
-                        <?php if(isset($itemData['nome_popular']) && $itemData['nome_popular'] !== $pageTitle): ?>
-                            <p><strong>Nome Popular:</strong> <?php echo htmlspecialchars($itemData['nome_popular']); ?></p>
-                        <?php endif; ?>
-                        <p><strong>Família:</strong> <?php echo htmlspecialchars($itemData['familia']); ?></p>
-                        <p><strong>Gênero:</strong> <?php echo htmlspecialchars($itemData['genero']); ?></p>
-                        <p><strong>Habitat Típico:</strong> <?php echo htmlspecialchars($itemData['habitat']); ?></p>
-                        <p><strong>Dieta Principal:</strong> <?php echo htmlspecialchars($itemData['dieta']); ?></p>
-                        <p><strong>Importância Ecológica:</strong> <?php echo htmlspecialchars($itemData['importancia_ecologica']); ?></p>
-                        <h3 class="mt-4">Mais Informações:</h3>
-                        <p class="text-indent"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'])); ?></p>
-                    <?php elseif ($itemType === 'lago'): ?>
-                         <p><strong>Localização:</strong> <?php echo htmlspecialchars($itemData['localizacao']); ?></p>
-                         <p><strong>Tipo de Água:</strong> <?php echo htmlspecialchars($itemData['tipo_agua']); ?></p>
-                         <p><strong>Fauna em Destaque:</strong> <?php echo htmlspecialchars($itemData['fauna_destaque']); ?></p>
-                         <p><strong>Flora em Destaque:</strong> <?php echo htmlspecialchars($itemData['flora_destaque']); ?></p>
-                         <h3 class="mt-4">Descrição Geral:</h3>
-                         <p class="text-indent"><?php echo nl2br(htmlspecialchars($itemData['descricao_geral'])); ?></p>
-                    <?php endif; ?>
-
-                    <div class="mt-4 pt-3 border-top">
-                        <a href="PaginaCards.php" class="btn btn-outline-primary"> <i class="bi bi-arrow-left-circle"></i> Ver Outros Itens</a>
-                        <a href="index.php" class="btn btn-outline-secondary ms-2"> <i class="bi bi-house"></i> Voltar para Início</a>
-                    </div>
+                    <h3 class="curiosidades-titulo">Curiosidades:</h3>
+                    <p class="text-indent curiosidades-texto"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'] ?? 'Nenhuma curiosidade informada.')); ?></p>
                 </div>
+
+                <div class="detalhes-info">
+                    <p><strong>Nome Científico:</strong> <em><?php echo htmlspecialchars($itemData['nome_cientifico']); ?></em></p>
+                    <?php if (!empty($itemData['nomes_populares'])): ?>
+                        <p><strong>Nomes Populares:</strong> <?php echo htmlspecialchars($itemData['nomes_populares']); ?>.</p>
+                    <?php endif; ?>
+                    <p><strong>Família:</strong> <?php echo htmlspecialchars($itemData['familia'] ?? 'N/A'); ?></p>
+                    <p><strong>Gênero:</strong> <?php echo htmlspecialchars($itemData['genero'] ?? 'N/A'); ?></p>
+                    <p><strong>Biomas:</strong> <?php echo htmlspecialchars($itemData['biomas_nomes'] ?? 'N/A'); ?></p>
+                    <p><strong>Tipo:</strong> <?php echo $descricao; ?></p>
+                    <p><strong>Medidas Comuns:</strong></p>
+                    <p>CAP: <?php echo htmlspecialchars($itemData['CAP'] ?? 'N/A'); ?></p>
+                    <p>DAP: <?php echo htmlspecialchars($itemData['DAP'] ?? 'N/A'); ?></p>
+                    <p>Amortização de carbono: <?php echo htmlspecialchars($itemData['amortizacao'] ?? 'N/A'); ?></p>
+                </div>
+
+                <div class="mt-4 pt-3 border-top w-100">
+                    <a href="PaginaCards.php" class="btn btn-outline-primary"> <i class="bi bi-arrow-left-circle"></i> Ver Outros Itens</a>
+                    <a href="index.php" class="btn btn-outline-secondary ms-2"> <i class="bi bi-house"></i> Voltar para Início</a>
+                </div>
+            </div>
             </div>
         <?php else: ?>
             <div class="alert alert-warning text-center" role="alert">
                 Oops! As informações para este item não foram encontradas ou o item não existe.
             </div>
             <div class="text-center mt-3">
-                 <a href="PaginaCards.php" class="btn btn-primary"> <i class="bi bi-arrow-left-circle"></i> Ver Outros Itens</a>
-                 <a href="index.php" class="btn btn-secondary ms-2"> <i class="bi bi-house"></i> Voltar para Início</a>
+                <a href="PaginaCards.php" class="btn btn-primary"> <i class="bi bi-arrow-left-circle"></i> Ver Outros Itens</a>
+                <a href="index.php" class="btn btn-secondary ms-2"> <i class="bi bi-house"></i> Voltar para Início</a>
             </div>
         <?php endif; ?>
     </main>
 
     <?php include '../includes/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+</body>
+
 </html>

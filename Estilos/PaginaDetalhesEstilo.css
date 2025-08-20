@@ -1,4 +1,3 @@
-
 body {
   font-family: 'Quicksand', sans-serif; 
   background-color: #f4f1ee; 
@@ -126,18 +125,25 @@ body {
 /* Responsividade */
 @media (min-width: 992px) { 
   .detalhes-container {
-    flex-direction: row; 
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1.5rem;
   }
-
-  .detalhes-imagem-wrapper {
-    flex: 0 0 40%; 
-    max-width: 40%;
-    align-self: flex-start; /
-  }
-
+  .detalhes-imagem-wrapper,
+  .detalhes-curiosidades,
   .detalhes-info {
-    padding-left: 2.5rem;
-    flex: 1;
+    flex-grow: 1;
+  }
+  .detalhes-imagem-wrapper {
+    flex-basis: 40%;
+  }
+  .detalhes-curiosidades {
+    flex-basis: 55%;
+  }
+  .detalhes-info {
+    flex-basis: 100%;
+    margin-top: 1.5rem;
   }
 }
 
@@ -163,4 +169,24 @@ body {
     color: #856404;
     padding: 1rem 1.25rem;
     border-radius: 0.25rem;
+}
+
+.detalhes-curiosidades {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 8px;
+}
+
+.curiosidades-titulo {
+  font-family: 'Marcellus', serif;
+  color: #6f9683;
+  font-size: 1.7rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: normal;
+}
+
+.curiosidades-texto {
+  margin: 0;
+  line-height: 1.5;
 }
