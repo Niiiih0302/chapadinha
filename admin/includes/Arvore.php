@@ -10,7 +10,7 @@ class Arvore {
     }
 
     /**
-     * Busca árvore completa pelo ID (incluindo dados de tabelas relacionadas)
+     * Busca árvore completa pelo ID (sem biomas e medidas)
      * @param int $id ID da árvore
      * @return array|null
      */
@@ -27,6 +27,16 @@ class Arvore {
             if ($result_arvore->num_rows > 0) {
                 $arvore = $result_arvore->fetch_assoc();
 
+                // Buscar imagens
+                $query_imagens = "SELECT id, caminho_imagem FROM arvore_imagens WHERE fk_arvore = '$id' ORDER BY id";
+                $result_imagens = $this->conn->query($query_imagens);
+                if (!$result_imagens) throw new Exception("Erro ao buscar imagens: " . $this->conn->error);
+                $arvore['imagens'] = [];
+                while ($row_img = $result_imagens->fetch_assoc()) {
+                    $arvore['imagens'][] = $row_img;
+                }
+
+                // Buscar nomes populares
                 $query_np = "SELECT nome FROM nome_popular WHERE fk_arvore = '$id'";
                 $result_np = $this->conn->query($query_np);
                 if (!$result_np) throw new Exception("Erro ao buscar nomes populares: " . $this->conn->error);
@@ -35,26 +45,7 @@ class Arvore {
                     $arvore['nomes_populares'][] = $row_np['nome'];
                 }
 
-                $query_biomas_nomes = "SELECT b.nome 
-                                       FROM arvore_bioma ab
-                                       JOIN bioma b ON ab.fk_bioma = b.id
-                                       WHERE ab.fk_arvore = '$id'";
-                $result_biomas_nomes = $this->conn->query($query_biomas_nomes);
-                if (!$result_biomas_nomes) throw new Exception("Erro ao buscar nomes dos biomas da árvore: " . $this->conn->error);
-                $arvore['biomas_nomes'] = []; 
-                while ($row_bn = $result_biomas_nomes->fetch_assoc()) {
-                    $arvore['biomas_nomes'][] = $row_bn['nome'];
-                }
-
-                $query_medidas = "SELECT CAP, DAP, amortizacao FROM medidas WHERE fk_arvore = '$id' LIMIT 1";
-                $result_medidas = $this->conn->query($query_medidas);
-                if (!$result_medidas) throw new Exception("Erro ao buscar medidas: " . $this->conn->error);
-                if ($result_medidas->num_rows > 0) {
-                    $arvore['medidas'] = $result_medidas->fetch_assoc();
-                } else {
-                    $arvore['medidas'] = ['CAP' => null, 'DAP' => null, 'amortizacao' => null];
-                }
-
+                // Buscar tipo de árvore
                 $query_tipo = "SELECT exotica_nativa, medicinal, toxica FROM tipo_arvore WHERE fk_arvore = '$id' LIMIT 1";
                 $result_tipo = $this->conn->query($query_tipo);
                 if (!$result_tipo) throw new Exception("Erro ao buscar tipo de árvore: " . $this->conn->error);
@@ -72,12 +63,19 @@ class Arvore {
     }
 
     /**
-     * Lista todas as árvores (dados básicos para a tabela de administração)
+     * Lista todas as árvores
      * @return array
      */
     public function listarTodas() {
         try {
-            $query = "SELECT id, nome_cientifico, familia, genero, imagem FROM arvore ORDER BY nome_cientifico"; //
+            $query = "SELECT a.id, a.nome_cientifico, a.familia, a.genero, 
+                             (SELECT ai.caminho_imagem 
+                              FROM arvore_imagens ai 
+                              WHERE ai.fk_arvore = a.id 
+                              ORDER BY ai.id ASC 
+                              LIMIT 1) as imagem_principal
+                      FROM arvore a 
+                      ORDER BY a.nome_cientifico";
             $result = $this->conn->query($query);
             if (!$result) {
                 throw new Exception("Erro ao listar árvores: " . $this->conn->error);
@@ -96,39 +94,8 @@ class Arvore {
     }
     
     /**
-     * Busca ou cria um bioma pelo nome e retorna seu ID.
-     * @param string $nomeBioma Nome do bioma
-     * @return int|false ID do bioma ou false em caso de erro.
-     */
-    private function obterIdBioma($nomeBioma) {
-        $nomeBiomaEsc = $this->conn->real_escape_string(trim($nomeBioma));
-        if (empty($nomeBiomaEsc)) {
-            return false;
-        }
-
-        $query_select = "SELECT id FROM bioma WHERE nome = '$nomeBiomaEsc'";
-        $result = $this->conn->query($query_select);
-        if (!$result) {
-            throw new Exception("Erro ao buscar bioma '$nomeBiomaEsc': " . $this->conn->error);
-        }
-
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            return (int)$row['id'];
-        } else {
-            $query_insert = "INSERT INTO bioma (nome, descricao) VALUES ('$nomeBiomaEsc', NULL)";
-            if (!$this->conn->query($query_insert)) {
-                throw new Exception("Erro ao criar novo bioma '$nomeBiomaEsc': " . $this->conn->error);
-            }
-            return (int)$this->conn->insert_id;
-        }
-    }
-
-
-    /**
      * Cria uma nova árvore com todos os seus dados relacionados.
      * @param array $dados Dados da árvore e suas relações.
-     * 'biomas_nomes' deve ser um array de strings com os nomes dos biomas.
      * @return int|false Retorna o ID da árvore criada ou false em caso de erro.
      */
     public function criar(array $dados) {
@@ -138,15 +105,21 @@ class Arvore {
             $familia = isset($dados['familia']) ? $this->conn->real_escape_string($dados['familia']) : NULL;
             $genero = isset($dados['genero']) ? $this->conn->real_escape_string($dados['genero']) : NULL;
             $curiosidade = isset($dados['curiosidade']) ? $this->conn->real_escape_string($dados['curiosidade']) : NULL;
-            $imagem = isset($dados['imagem']) ? $this->conn->real_escape_string($dados['imagem']) : NULL;
 
-            $query_arvore = "INSERT INTO arvore (nome_cientifico, familia, genero, curiosidade, imagem) 
-                             VALUES ('$nome_cientifico', ".($familia !== NULL ? "'$familia'" : "NULL").", ".($genero !== NULL ? "'$genero'" : "NULL").", ".($curiosidade !== NULL ? "'$curiosidade'" : "NULL").", ".($imagem !== NULL ? "'$imagem'" : "NULL").")";
+            $query_arvore = "INSERT INTO arvore (nome_cientifico, familia, genero, curiosidade) 
+                             VALUES ('$nome_cientifico', ".($familia !== NULL ? "'$familia'" : "NULL").", ".($genero !== NULL ? "'$genero'" : "NULL").", ".($curiosidade !== NULL ? "'$curiosidade'" : "NULL").")";
             if (!$this->conn->query($query_arvore)) {
                 throw new Exception("Erro ao criar árvore principal: " . $this->conn->error . " Query: " . $query_arvore);
             }
             $id_arvore = $this->conn->insert_id;
 
+            if (!empty($dados['imagens_novas'])) {
+                foreach ($dados['imagens_novas'] as $caminho_imagem) {
+                    $caminho_esc = $this->conn->real_escape_string($caminho_imagem);
+                    $query_img = "INSERT INTO arvore_imagens (fk_arvore, caminho_imagem) VALUES ('$id_arvore', '$caminho_esc')";
+                    if (!$this->conn->query($query_img)) throw new Exception("Erro ao inserir imagem '$caminho_esc': " . $this->conn->error);
+                }
+            }
 
             if (!empty($dados['nomes_populares'])) {
                 foreach ($dados['nomes_populares'] as $np) {
@@ -158,43 +131,12 @@ class Arvore {
                 }
             }
 
-
-            if (!empty($dados['biomas_nomes'])) {
-                foreach ($dados['biomas_nomes'] as $nome_bioma_str) {
-                    $id_bioma = $this->obterIdBioma($nome_bioma_str);
-                    if ($id_bioma) {
-                        $query_ab = "INSERT INTO arvore_bioma (fk_arvore, fk_bioma) VALUES ('$id_arvore', '$id_bioma')";
-                        if (!$this->conn->query($query_ab)) throw new Exception("Erro ao associar bioma '$nome_bioma_str' (ID: $id_bioma): " . $this->conn->error);
-                    }
-                }
-            }
-
-
-
-            if (isset($dados['medidas'])) {
-                $cap = isset($dados['medidas']['CAP']) && $dados['medidas']['CAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['CAP']) : null;
-                $dap = isset($dados['medidas']['DAP']) && $dados['medidas']['DAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['DAP']) : null;
-                $amortizacao = isset($dados['medidas']['amortizacao']) && $dados['medidas']['amortizacao'] !== '' ? $this->conn->real_escape_string($dados['medidas']['amortizacao']) : null;
-
-                if ($cap !== null || $dap !== null || $amortizacao !== null) {
-                    $cap_sql = $cap !== null ? "'$cap'" : "NULL";
-                    $dap_sql = $dap !== null ? "'$dap'" : "NULL";
-                    $amortizacao_sql = $amortizacao !== null ? "'$amortizacao'" : "NULL";
-
-                    $query_medidas = "INSERT INTO medidas (fk_arvore, CAP, DAP, amortizacao) 
-                                      VALUES ('$id_arvore', $cap_sql, $dap_sql, $amortizacao_sql)";
-                    if (!$this->conn->query($query_medidas)) throw new Exception("Erro ao inserir medidas: " . $this->conn->error);
-                }
-            }
-
-
             if (isset($dados['tipo_arvore'])) {
                 $exotica_nativa = isset($dados['tipo_arvore']['exotica_nativa']) && $dados['tipo_arvore']['exotica_nativa'] !== '' ? (int)$dados['tipo_arvore']['exotica_nativa'] : null;
                 $medicinal = isset($dados['tipo_arvore']['medicinal']) ? (int)$dados['tipo_arvore']['medicinal'] : 0; 
                 $toxica = isset($dados['tipo_arvore']['toxica']) ? (int)$dados['tipo_arvore']['toxica'] : 0; 
 
-
-                 if ($exotica_nativa !== null || $medicinal !== null || $toxica !== null) { // Medicinal e toxica agora sempre terão valor (0 ou 1)
+                 if ($exotica_nativa !== null || $medicinal !== 0 || $toxica !== 0) { // Verifica se há algo para inserir
                     $exotica_nativa_sql = $exotica_nativa !== null ? "$exotica_nativa" : "NULL"; 
                     $medicinal_sql = "$medicinal"; 
                     $toxica_sql = "$toxica"; 
@@ -218,7 +160,6 @@ class Arvore {
      * Atualiza uma árvore existente e seus dados relacionados.
      * @param int $id ID da árvore a ser atualizada.
      * @param array $dados Novos dados da árvore e suas relações.
-     * 'biomas_nomes' deve ser um array de strings com os nomes dos biomas.
      * @return bool
      */
     public function atualizar($id, array $dados) {
@@ -231,21 +172,31 @@ class Arvore {
             $genero = isset($dados['genero']) ? $this->conn->real_escape_string($dados['genero']) : NULL;
             $curiosidade = isset($dados['curiosidade']) ? $this->conn->real_escape_string($dados['curiosidade']) : NULL;
             
-            $imagem_sql_part = "";
-            if (array_key_exists('imagem', $dados)) { 
-                 $imagem = $dados['imagem'] !== null ? $this->conn->real_escape_string($dados['imagem']) : null;
-                 $imagem_sql_part = ", imagem = " . ($imagem !== null ? "'$imagem'" : "NULL");
-            }
-
             $query_arvore = "UPDATE arvore 
                              SET nome_cientifico = '$nome_cientifico', 
                                  familia = ".($familia !== NULL ? "'$familia'" : "NULL").", 
                                  genero = ".($genero !== NULL ? "'$genero'" : "NULL").", 
                                  curiosidade = ".($curiosidade !== NULL ? "'$curiosidade'" : "NULL")."
-                                 $imagem_sql_part
                              WHERE id = '$id_arvore'";
             if (!$this->conn->query($query_arvore)) {
                 throw new Exception("Erro ao atualizar árvore principal: " . $this->conn->error . " Query: " . $query_arvore);
+            }
+
+            if (!empty($dados['imagens_novas'])) {
+                foreach ($dados['imagens_novas'] as $caminho_imagem) {
+                    $caminho_esc = $this->conn->real_escape_string($caminho_imagem);
+                    $query_img = "INSERT INTO arvore_imagens (fk_arvore, caminho_imagem) VALUES ('$id_arvore', '$caminho_esc')";
+                    if (!$this->conn->query($query_img)) throw new Exception("Erro ao inserir nova imagem '$caminho_esc': " . $this->conn->error);
+                }
+            }
+            
+            if (!empty($dados['imagens_para_excluir'])) {
+                $ids_para_excluir = array_map('intval', $dados['imagens_para_excluir']);
+                $ids_string = implode(',', $ids_para_excluir);
+                if (!empty($ids_string)) {
+                    $query_del_img = "DELETE FROM arvore_imagens WHERE id IN ($ids_string) AND fk_arvore = '$id_arvore'";
+                    if (!$this->conn->query($query_del_img)) throw new Exception("Erro ao excluir imagens antigas: " . $this->conn->error);
+                }
             }
 
             $query_del_np = "DELETE FROM nome_popular WHERE fk_arvore = '$id_arvore'";
@@ -261,37 +212,6 @@ class Arvore {
                 }
             }
 
-            $query_del_ab = "DELETE FROM arvore_bioma WHERE fk_arvore = '$id_arvore'";
-            if (!$this->conn->query($query_del_ab)) throw new Exception("Erro ao limpar biomas antigos da árvore: " . $this->conn->error);
-            
-            if (!empty($dados['biomas_nomes'])) {
-                foreach ($dados['biomas_nomes'] as $nome_bioma_str) {
-                     $id_bioma = $this->obterIdBioma($nome_bioma_str);
-                    if ($id_bioma) {
-                        $query_ab = "INSERT INTO arvore_bioma (fk_arvore, fk_bioma) VALUES ('$id_arvore', '$id_bioma')";
-                        if (!$this->conn->query($query_ab)) throw new Exception("Erro ao associar bioma '$nome_bioma_str' (ID: $id_bioma) na atualização: " . $this->conn->error);
-                    }
-                }
-            }
-
-
-            $query_del_medidas = "DELETE FROM medidas WHERE fk_arvore = '$id_arvore'";
-            if (!$this->conn->query($query_del_medidas)) throw new Exception("Erro ao limpar medidas antigas: " . $this->conn->error);
-            if (isset($dados['medidas'])) {
-                $cap = isset($dados['medidas']['CAP']) && $dados['medidas']['CAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['CAP']) : null;
-                $dap = isset($dados['medidas']['DAP']) && $dados['medidas']['DAP'] !== '' ? $this->conn->real_escape_string($dados['medidas']['DAP']) : null;
-                $amortizacao = isset($dados['medidas']['amortizacao']) && $dados['medidas']['amortizacao'] !== '' ? $this->conn->real_escape_string($dados['medidas']['amortizacao']) : null;
-
-                if ($cap !== null || $dap !== null || $amortizacao !== null) {
-                    $cap_sql = $cap !== null ? "'$cap'" : "NULL";
-                    $dap_sql = $dap !== null ? "'$dap'" : "NULL";
-                    $amortizacao_sql = $amortizacao !== null ? "'$amortizacao'" : "NULL";
-                    $query_medidas = "INSERT INTO medidas (fk_arvore, CAP, DAP, amortizacao) 
-                                      VALUES ('$id_arvore', $cap_sql, $dap_sql, $amortizacao_sql)";
-                    if (!$this->conn->query($query_medidas)) throw new Exception("Erro ao inserir novas medidas: " . $this->conn->error);
-                }
-            }
-
             $query_del_tipo = "DELETE FROM tipo_arvore WHERE fk_arvore = '$id_arvore'";
             if (!$this->conn->query($query_del_tipo)) throw new Exception("Erro ao limpar tipo de árvore antigo: " . $this->conn->error);
             if (isset($dados['tipo_arvore'])) {
@@ -299,7 +219,7 @@ class Arvore {
                 $medicinal = isset($dados['tipo_arvore']['medicinal']) ? (int)$dados['tipo_arvore']['medicinal'] : 0;
                 $toxica = isset($dados['tipo_arvore']['toxica']) ? (int)$dados['tipo_arvore']['toxica'] : 0;
 
-                if ($exotica_nativa !== null || $medicinal !== null || $toxica !== null) { // Medicinal e toxica sempre terão valor
+                if ($exotica_nativa !== null || $medicinal !== 0 || $toxica !== 0) {
                     $exotica_nativa_sql = $exotica_nativa !== null ? "$exotica_nativa" : "NULL";
                     $medicinal_sql = "$medicinal";
                     $toxica_sql = "$toxica";
@@ -326,7 +246,7 @@ class Arvore {
     public function excluir($id) {
         try {
             $id = $this->conn->real_escape_string($id);
-            $query = "DELETE FROM arvore WHERE id = '$id'"; //
+            $query = "DELETE FROM arvore WHERE id = '$id'";
             $result = $this->conn->query($query);
             if (!$result) {
                 throw new Exception("Erro ao excluir árvore: " . $this->conn->error);
@@ -337,6 +257,5 @@ class Arvore {
             return false;
         }
     }
-
 }
 ?>
