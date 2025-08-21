@@ -223,9 +223,13 @@ switch ($tipo_filtro) {
             $itens_exibidos = 0;
 
             if ($tipo_filtro == 'todos' || $tipo_filtro == 'arvore') {
-                $sql = "SELECT a.id, a.imagem, np.nome AS nome_popular, a.nome_cientifico
+                // ALTERADO: A consulta SQL foi atualizada para a nova estrutura do banco de dados.
+                $sql = "SELECT a.id, a.nome_cientifico, 
+                               np.nome AS nome_popular, 
+                               ai.caminho_imagem
                         FROM arvore a
                         LEFT JOIN nome_popular np ON a.id = np.fk_arvore
+                        LEFT JOIN arvore_imagens ai ON a.id = ai.fk_arvore
                         GROUP BY a.id
                         ORDER BY np.nome, a.nome_cientifico";
                 $resultado = mysqli_query($conn, $sql);
@@ -237,7 +241,7 @@ switch ($tipo_filtro) {
                         <div class="card">
                             <div class="content">
                                 <div class="front">
-                                    <img src="<?php echo $url_img . (!empty($arvore['imagem']) ? htmlspecialchars($arvore['imagem']) : 'placeholder-arvore.png'); ?>" alt="<?php echo htmlspecialchars($arvore['nome_popular'] ?? $arvore['nome_cientifico']); ?>">
+                                    <img src="<?php echo $url_img . (!empty($arvore['caminho_imagem']) ? htmlspecialchars($arvore['caminho_imagem']) : 'placeholder-arvore.png'); ?>" alt="<?php echo htmlspecialchars($arvore['nome_popular'] ?? $arvore['nome_cientifico']); ?>">
                                     <h3><?php echo htmlspecialchars($arvore['nome_popular'] ?? $arvore['nome_cientifico']); ?></h3>
                                     <?php if(!empty($arvore['nome_popular']) && !empty($arvore['nome_cientifico']) && $arvore['nome_popular'] != $arvore['nome_cientifico']): ?>
                                         <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($arvore['nome_cientifico']); ?></em></p>

@@ -1,18 +1,16 @@
 <?php
-// Simula a busca de dados com base em um ID e tipo passados via GET.
-// Em um cenário real, você obteria esses dados do banco de dados.
-$itemId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '1'; // ID padrão
-$itemType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : 'arvore'; // Tipo padrão
+$itemId = isset($_GET['id']) ? htmlspecialchars($_GET['id']) : '1'; 
+$itemType = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : 'arvore'; 
 
 include '../includes/conexao.php';
 
-// Dados de exemplo - substitua pela sua lógica de banco de dados
 $itemData = [];
 $pageTitle = 'Detalhes do Item';
 $url_img = '/chapadinha/img/';
 
 if ($itemType === 'arvore') {
-    // Consulta principal para dados da árvore, medidas e tipo_arvore
+    // ALTERADO: Consulta principal simplificada para a nova estrutura.
+    // Removido o JOIN com a tabela 'medidas' e a busca pela coluna 'imagem'.
     $stmt_main = $conn->prepare("
         SELECT 
             a.id,
@@ -20,15 +18,10 @@ if ($itemType === 'arvore') {
             a.familia,
             a.genero,
             a.curiosidade,
-            a.imagem,
-            m.CAP,
-            m.DAP,
-            m.amortizacao, -- CORRIGIDO AQUI: de 'amortizacao' para 'amortizacao'
             t.exotica_nativa,
             t.medicinal,
             t.toxica
         FROM arvore a
-        LEFT JOIN medidas m ON m.fk_arvore = a.id
         LEFT JOIN tipo_arvore t ON t.fk_arvore = a.id
         WHERE a.id = ?;
     ");
@@ -44,7 +37,7 @@ if ($itemType === 'arvore') {
     $stmt_main->close();
 
     if ($itemData) {
-        // Buscar nomes populares separadamente
+        // A busca por nomes populares permanece a mesma.
         $stmt_np = $conn->prepare("SELECT nome FROM nome_popular WHERE fk_arvore = ?");
         if (!$stmt_np) {
             die("Erro na preparação da consulta de nomes populares: " . $conn->error);
@@ -59,28 +52,30 @@ if ($itemType === 'arvore') {
         $itemData['nomes_populares'] = implode(', ', $nomes_populares_arr);
         $stmt_np->close();
 
-        // Buscar biomas separadamente
-        $stmt_bioma = $conn->prepare("SELECT b.nome FROM arvore_bioma ab JOIN bioma b ON ab.fk_bioma = b.id WHERE ab.fk_arvore = ?");
-        if (!$stmt_bioma) {
-            die("Erro na preparação da consulta de biomas: " . $conn->error);
+        // NOVO: Buscar imagens da nova tabela 'arvore_imagens'.
+        $stmt_img = $conn->prepare("SELECT caminho_imagem FROM arvore_imagens WHERE fk_arvore = ?");
+        if (!$stmt_img) {
+            die("Erro na preparação da consulta de imagens: " . $conn->error);
         }
-        $stmt_bioma->bind_param("i", $itemId);
-        $stmt_bioma->execute();
-        $resultado_bioma = $stmt_bioma->get_result();
-        $biomas_arr = [];
-        while ($row_bioma = $resultado_bioma->fetch_assoc()) {
-            $biomas_arr[] = $row_bioma['nome'];
+        $stmt_img->bind_param("i", $itemId);
+        $stmt_img->execute();
+        $resultado_img = $stmt_img->get_result();
+        $imagens_arr = [];
+        while ($row_img = $resultado_img->fetch_assoc()) {
+            $imagens_arr[] = $row_img['caminho_imagem'];
         }
-        $itemData['biomas_nomes'] = implode(', ', $biomas_arr); // Armazena como biomas_nomes
-        $stmt_bioma->close();
+        $itemData['imagens'] = $imagens_arr; // Adiciona um array de imagens aos dados.
+        $stmt_img->close();
 
-        // Definir pageTitle
+
+        // REMOVIDO: A busca por biomas foi removida pois as tabelas não existem na nova estrutura.
+
+        // Lógica para definir o título e a descrição permanece.
         $pageTitle = !empty($nomes_populares_arr) ? $nomes_populares_arr[0] : $itemData['nome_cientifico'];
 
-        // Variáveis para a exibição do tipo da árvore
         $tipo = '';
         if (isset($itemData['exotica_nativa'])) {
-            $tipo = ($itemData['exotica_nativa'] == 1) ? "exótica" : "nativa"; // Corrigido para nativa/exótica
+            $tipo = ($itemData['exotica_nativa'] == 1) ? "exótica" : "nativa";
         } else {
             $tipo = "Não informado";
         }
@@ -98,7 +93,7 @@ if ($itemType === 'arvore') {
         'familia' => 'Termitidae',
         'genero' => 'Cornitermes',
         'curiosidade' => 'Os cupinzeiros são ecossistemas em miniatura, abrigando não apenas cupins, mas também outros insetos e até pequenos vertebrados. A estrutura interna é complexa, com túneis e câmaras para ventilação, cultivo de fungos e armazenamento de alimentos. Eles são essenciais para a ciclagem de nutrientes no solo.',
-        'imagem' => '../img/cupim-card.png',
+        'imagens' => ['cupim-card.png'], // ALTERADO: para manter consistência com o array de imagens
         'habitat' => 'Campos abertos e bordas de mata',
         'dieta' => 'Material vegetal em decomposição, celulose',
         'importancia_ecologica' => 'Decomposição de matéria orgânica, aeração do solo, fonte de alimento.'
@@ -108,8 +103,8 @@ if ($itemType === 'arvore') {
     $itemData = [
         'id' => $itemId,
         'nome_popular' => 'Lagoa da Chapadinha',
-        'descricao_geral' => 'A Lagoa da Chapadinha é um ponto central da vida selvagem local, oferecendo recursos hídricos vitais e um habitat diversificado. Sua conservação é crucial para manter o equilíbrio ecológico da região. Atividades de educação ambiental são frequentemente realizadas em suas margens para conscientizar a população sobre sua importância.',
-        'imagem' => '../img/lago-card.png',
+        'curiosidade' => 'A Lagoa da Chapadinha é um ponto central da vida selvagem local, oferecendo recursos hídricos vitais e um habitat diversificado. Sua conservação é crucial para manter o equilíbrio ecológico da região. Atividades de educação ambiental são frequentemente realizadas em suas margens para conscientizar a população sobre sua importância.', // ALTERADO: movido para 'curiosidade'
+        'imagens' => ['lago-card.png'], // ALTERADO: para manter consistência com o array de imagens
         'localizacao' => 'Parque Municipal da Chapadinha',
         'tipo_agua' => 'Doce, com pH neutro',
         'fauna_destaque' => 'Peixes como lambaris e traíras, aves aquáticas como garças e patos-selvagens, além de capivaras.',
@@ -118,46 +113,62 @@ if ($itemType === 'arvore') {
     $pageTitle = $itemData['nome_popular'];
 }
 
-
 include '../includes/head.php';
 ?>
 <link rel="stylesheet" href="../Estilos/PaginaDetalhesEstilo.css">
 <title><?php echo htmlspecialchars($pageTitle); ?> - Lagoa da Chapadinha</title>
 
 <body>
-    <?php include '../includes/header.php';  ?>
+    <?php include '../includes/header.php'; ?>
 
     <main class="container my-5">
         <?php if (!empty($itemData)): ?>
             <div class="detalhes-container shadow-lg">
                 <div class="detalhes-imagem-wrapper">
-                    <img src="<?php echo $url_img . $itemData['imagem']; ?>" alt="Imagem de <?php echo htmlspecialchars($pageTitle); ?>" class="img-fluid rounded">
+                    <img src="<?php echo $url_img . (!empty($itemData['imagens']) ? htmlspecialchars($itemData['imagens'][0]) : 'placeholder-arvore.png'); ?>" alt="Imagem de <?php echo htmlspecialchars($pageTitle); ?>" class="img-fluid rounded">
                 </div>
 
                 <div class="detalhes-curiosidades">
                     <h1 class="nome-item mb-3"><?php echo htmlspecialchars($pageTitle); ?></h1>
-                    <h3 class="curiosidades-titulo">Curiosidades:</h3>
-                    <p class="text-indent curiosidades-texto"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'] ?? 'Nenhuma curiosidade informada.')); ?></p>
+                    
+                    <?php if($itemType === 'arvore' || $itemType === 'cupim'): ?>
+                        <h3 class="curiosidades-titulo">Curiosidades:</h3>
+                        <p class="text-indent curiosidades-texto"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'] ?? 'Nenhuma curiosidade informada.')); ?></p>
+                    <?php elseif($itemType === 'lago'): ?>
+                        <h3 class="curiosidades-titulo">Descrição Geral:</h3>
+                        <p class="text-indent curiosidades-texto"><?php echo nl2br(htmlspecialchars($itemData['curiosidade'])); ?></p>
+                    <?php endif; ?>
+
                 </div>
 
                 <div class="detalhes-info">
-                    <p><strong>Nome Científico:</strong> <em><?php echo htmlspecialchars($itemData['nome_cientifico']); ?></em></p>
-                    <?php if (!empty($itemData['nomes_populares'])): ?>
-                        <p><strong>Nomes Populares:</strong> <?php echo htmlspecialchars($itemData['nomes_populares']); ?>.</p>
+                    <?php if($itemType === 'arvore'): ?>
+                        <p><strong>Nome Científico:</strong> <em><?php echo htmlspecialchars($itemData['nome_cientifico']); ?></em></p>
+                        <?php if (!empty($itemData['nomes_populares'])): ?>
+                            <p><strong>Nomes Populares:</strong> <?php echo htmlspecialchars($itemData['nomes_populares']); ?>.</p>
+                        <?php endif; ?>
+                        <p><strong>Família:</strong> <?php echo htmlspecialchars($itemData['familia'] ?? 'N/A'); ?></p>
+                        <p><strong>Gênero:</strong> <?php echo htmlspecialchars($itemData['genero'] ?? 'N/A'); ?></p>
+                        <p><strong>Tipo:</strong> <?php echo $descricao; ?></p>
+                        
+                        <?php elseif($itemType === 'cupim'): ?>
+                        <p><strong>Nome Científico:</strong> <em><?php echo htmlspecialchars($itemData['nome_cientifico']); ?></em></p>
+                        <p><strong>Família:</strong> <?php echo htmlspecialchars($itemData['familia']); ?></p>
+                        <p><strong>Gênero:</strong> <?php echo htmlspecialchars($itemData['genero']); ?></p>
+                        <p><strong>Habitat:</strong> <?php echo htmlspecialchars($itemData['habitat']); ?></p>
+                        <p><strong>Dieta:</strong> <?php echo htmlspecialchars($itemData['dieta']); ?></p>
+                        <p><strong>Importância Ecológica:</strong> <?php echo htmlspecialchars($itemData['importancia_ecologica']); ?></p>
+
+                    <?php elseif($itemType === 'lago'): ?>
+                        <p><strong>Localização:</strong> <?php echo htmlspecialchars($itemData['localizacao']); ?></p>
+                        <p><strong>Tipo de Água:</strong> <?php echo htmlspecialchars($itemData['tipo_agua']); ?></p>
+                        <p><strong>Destaques da Fauna:</strong> <?php echo htmlspecialchars($itemData['fauna_destaque']); ?></p>
+                        <p><strong>Destaques da Flora:</strong> <?php echo htmlspecialchars($itemData['flora_destaque']); ?></p>
                     <?php endif; ?>
-                    <p><strong>Família:</strong> <?php echo htmlspecialchars($itemData['familia'] ?? 'N/A'); ?></p>
-                    <p><strong>Gênero:</strong> <?php echo htmlspecialchars($itemData['genero'] ?? 'N/A'); ?></p>
-                    <p><strong>Biomas:</strong> <?php echo htmlspecialchars($itemData['biomas_nomes'] ?? 'N/A'); ?></p>
-                    <p><strong>Tipo:</strong> <?php echo $descricao; ?></p>
-                    <p><strong>Medidas Comuns:</strong></p>
-                    <p>CAP: <?php echo htmlspecialchars($itemData['CAP'] ?? 'N/A'); ?></p>
-                    <p>DAP: <?php echo htmlspecialchars($itemData['DAP'] ?? 'N/A'); ?></p>
-                    <p>Amortização de carbono: <?php echo htmlspecialchars($itemData['amortizacao'] ?? 'N/A'); ?></p>
                 </div>
 
                 <div class="mt-4 pt-3 border-top w-100">
-                    <a href="PaginaCards.php" class="btn btn-outline-primary"> <i class="bi bi-arrow-left-circle"></i> Ver Outros Itens</a>
-                    <a href="index.php" class="btn btn-outline-secondary ms-2"> <i class="bi bi-house"></i> Voltar para Início</a>
+                    <a href="PaginaCards.php" class="btn btn-outline-primary"> <i class="bi bi-arrow-left-circle"></i> Voltar para o Catálogo</a>
                 </div>
             </div>
             </div>
@@ -166,8 +177,7 @@ include '../includes/head.php';
                 Oops! As informações para este item não foram encontradas ou o item não existe.
             </div>
             <div class="text-center mt-3">
-                <a href="PaginaCards.php" class="btn btn-primary"> <i class="bi bi-arrow-left-circle"></i> Ver Outros Itens</a>
-                <a href="index.php" class="btn btn-secondary ms-2"> <i class="bi bi-house"></i> Voltar para Início</a>
+                <a href="PaginaCards.php" class="btn btn-primary"> <i class="bi bi-arrow-left-circle"></i> Voltar para o Catálogo</a>
             </div>
         <?php endif; ?>
     </main>
