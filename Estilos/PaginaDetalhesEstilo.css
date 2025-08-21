@@ -175,6 +175,7 @@ body {
   background-color: #ffffff;
   padding: 2.5rem;
   border-radius: 8px;
+  position: relative; 
 }
 
 .curiosidades-titulo {
@@ -189,4 +190,11 @@ body {
 .curiosidades-texto {
   margin: 0;
   line-height: 1.5;
+}
+
+.btn-share {
+  position: absolute;
+  top: 1rem;  /* 16px */
+  right: 1rem; /* 16px */
+  z-index: 10;
 }
