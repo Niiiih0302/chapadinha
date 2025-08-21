@@ -110,6 +110,13 @@ try {
                                         data-bs-target="#modalEditarArvore">
                                     <i class="bi bi-pencil"></i>
                                 </button>
+                                <button class="btn btn-sm btn-secondary gerar-qrcode"
+                                        data-id="<?php echo $arvore['id']; ?>"
+                                        data-nome="<?php echo htmlspecialchars($arvore['nome_cientifico']); ?>"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalQrCode">
+                                    <i class="bi bi-qr-code"></i>
+                                </button>
                                 <button class="btn btn-sm btn-danger excluir-arvore"
                                         data-id="<?php echo $arvore['id']; ?>"
                                         data-nome="<?php echo htmlspecialchars($arvore['nome_cientifico']); ?>"
@@ -241,6 +248,28 @@ try {
     </div>
 </div>
 
+<div class="modal fade" id="modalQrCode" tabindex="-1" aria-labelledby="modalQrCodeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalQrCodeLabel">QR Code para <span id="qrcode_nome_arvore"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="qrcode" class="d-flex justify-content-center"></div>
+                <a href="#" id="download-qrcode" class="btn btn-success mt-3" download="qrcode.png"><i class="bi bi-download"></i> Baixar QR Code</a>
+                <div class="input-group mt-3">
+                    <input type="text" id="qrcode-link" class="form-control" value="" readonly>
+                    <button class="btn btn-outline-secondary" type="button" id="copy-link-btn">Copiar Link</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const urlImgBase = '<?php echo $url_img; ?>'; 
@@ -310,6 +339,48 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('excluir_id_arvore').value = id;
             document.getElementById('excluir_nome_arvore').textContent = nome;
         });
+    });
+
+    const qrcodeContainer = document.getElementById('qrcode');
+    const qrcode = new QRCode(qrcodeContainer, {
+        width: 256,
+        height: 256,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    const botoesQrCode = document.querySelectorAll('.gerar-qrcode');
+    botoesQrCode.forEach(botao => {
+        botao.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nome = this.getAttribute('data-nome');
+            const url = `<?php echo "http://" . $_SERVER['HTTP_HOST'] . $base_path; ?>/Paginas/PaginaDetalhes.php?type=arvore&id=${id}`;
+            
+            document.getElementById('qrcode_nome_arvore').textContent = nome;
+            document.getElementById('qrcode-link').value = url;
+            qrcode.makeCode(url);
+
+            setTimeout(() => {
+                const qrCanvas = qrcodeContainer.querySelector('canvas');
+                const downloadLink = document.getElementById('download-qrcode');
+                if (qrCanvas) {
+                    downloadLink.href = qrCanvas.toDataURL();
+                    downloadLink.download = `qrcode_${nome.replace(/ /g, '_')}.png`;
+                }
+            }, 500);
+        });
+    });
+
+    document.getElementById('copy-link-btn').addEventListener('click', function() {
+        const linkInput = document.getElementById('qrcode-link');
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999); // Para mobile
+        document.execCommand('copy');
+        
+        const originalText = this.textContent;
+        this.textContent = 'Copiado';
+        setTimeout(() => {
+            this.textContent = originalText;
+        }, 2000);
     });
 });
 </script>

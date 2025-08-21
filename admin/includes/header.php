@@ -11,36 +11,40 @@ require_once 'auth_check.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        .sidebar {
-            min-height: calc(100vh - 56px);
-            background-color: #f8f9fa;
-            border-right: 1px solid #dee2e6;
-        }
-        .sidebar .nav-link {
-            color: #333;
-            padding: 10px 15px;
-            border-radius: 0;
-        }
-        .sidebar .nav-link:hover {
-            background-color: #e9ecef;
-        }
-        .sidebar .nav-link.active {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .sidebar .nav-link i {
-            margin-right: 10px;
-        }
-        .content {
-            padding: 20px;
-        }
+        /* Adiciona a linha vertical à direita do título */
         .navbar-brand {
             font-weight: bold;
+            border-right: 1px solid rgba(255, 255, 255, 0.25);
+            padding-right: 1rem;
         }
+
+        /* Prepara o link da navegação para o sublinhado */
+        .navbar-nav .nav-link {
+            position: relative;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Estilo do sublinhado para o item ativo */
+        .navbar-nav .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0px; /* Posição do sublinhado ajustada para mais baixo */
+            left: 1rem;
+            right: 1rem;
+            height: 2px; /* Espessura da linha ajustada para mais fina */
+            background-color: #ffffff; /* Cor branca */
+            border-radius: 2px;
+        }
+
+        /* Garante que o texto do link ativo permaneça branco */
+        .navbar-nav .nav-link.active {
+            color: #fff !important;
+        }
+
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="arvores.php">Chapadinha Admin</a>
@@ -48,6 +52,17 @@ require_once 'auth_check.php';
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'arvores.php' ? 'active' : ''; ?>" href="arvores.php"><i class="bi bi-tree"></i> Gerenciar Árvores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'outros.php' ? 'active' : ''; ?>" href="outros.php"><i class="bi bi-info-circle"></i> Outros Itens</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'usuarios.php' ? 'active' : ''; ?>" href="usuarios.php"><i class="bi bi-people"></i> Gerenciar Usuários</a>
+                    </li>
+                </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
@@ -65,6 +80,5 @@ require_once 'auth_check.php';
     </nav>
 
 
-            <!-- Main content -->
             <main class="ms-sm-auto col-lg-12 px-md-4">
                 <div class="content">
