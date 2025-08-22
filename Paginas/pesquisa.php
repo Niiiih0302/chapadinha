@@ -50,26 +50,24 @@ include '../includes/header.php'; // Inclui o cabeçalho padrão
             if (!empty($pesquisa)) {
                 
                 $query_like = "
-                SELECT 
-                    a.id,
-                    a.nome_cientifico,
-                    a.familia,
-                    a.genero,
-                    a.curiosidade,
-                    a.imagem,
-                    GROUP_CONCAT(DISTINCT np.nome SEPARATOR ', ') AS nomes_populares,
-                    b.nome AS bioma
-                FROM arvore a
-                LEFT JOIN nome_popular np ON np.fk_arvore = a.id
-                LEFT JOIN arvore_bioma ab ON ab.fk_arvore = a.id
-                LEFT JOIN bioma b ON b.id = ab.fk_bioma
-                WHERE 
-                    a.nome_cientifico LIKE ? OR 
-                    np.nome LIKE ? OR 
-                    a.familia LIKE ? OR 
-                    a.genero LIKE ?
-                GROUP BY a.id
-                ORDER BY a.nome_cientifico";
+                    SELECT 
+                        a.id,
+                        a.nome_cientifico,
+                        a.familia,
+                        a.genero,
+                        a.curiosidade,
+                        ai.caminho_imagem,
+                        GROUP_CONCAT(DISTINCT np.nome SEPARATOR ', ') AS nomes_populares
+                    FROM arvore a
+                    LEFT JOIN nome_popular np ON np.fk_arvore = a.id
+                    LEFT JOIN arvore_imagens ai ON ai.fk_arvore = a.id
+                    WHERE 
+                        a.nome_cientifico LIKE ? OR 
+                        np.nome LIKE ? OR 
+                        a.familia LIKE ? OR 
+                        a.genero LIKE ?
+                    GROUP BY a.id
+                    ORDER BY a.nome_cientifico";
 
                 $stmt_like = $conn->prepare($query_like);
                 $like_term = "%$pesquisa%";
@@ -86,7 +84,7 @@ include '../includes/header.php'; // Inclui o cabeçalho padrão
                             <div class="content">
                                 <div class="front">
                                     <a href="PaginaDetalhes.php?type=arvore&id=<?php echo htmlspecialchars($row['id']); ?>" style="text-decoration: none; color: inherit;">
-                                        <img src="<?php echo $url_img . (!empty($row['imagem']) ? htmlspecialchars($row['imagem']) : 'sem-imagem.png'); ?>" alt="<?php echo htmlspecialchars($nome_exibicao); ?>">
+                                        <img src="<?php echo $url_img . (!empty($row['caminho_imagem']) ? htmlspecialchars($row['caminho_imagem']) : 'sem-imagem.png'); ?>" alt="<?php echo htmlspecialchars($nome_exibicao); ?>">
                                         <h3><?php echo htmlspecialchars($nome_exibicao); ?></h3>
                                         <?php if ($nome_exibicao != $row['nome_cientifico'] && !empty($row['nome_cientifico'])): ?>
                                             <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($row['nome_cientifico']); ?></em></p>
@@ -108,7 +106,7 @@ include '../includes/header.php'; // Inclui o cabeçalho padrão
                     if (str_word_count($pesquisa) <= 3) { 
                         $query_soundex = "
                             SELECT 
-                                a.id, a.nome_cientifico, a.imagem,
+                                a.id, a.nome_cientifico, ai.caminho_imagem,
                                 GROUP_CONCAT(DISTINCT np.nome SEPARATOR ', ') AS nomes_populares
                             FROM arvore a
                             LEFT JOIN nome_popular np ON np.fk_arvore = a.id
