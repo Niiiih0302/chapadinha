@@ -29,6 +29,14 @@ $pesquisa = $_GET['BarraPesquisa'] ?? '';
         margin-bottom: 1rem;
         font-size: 1.5rem;
     }
+
+    /* Efeito de hover no card */
+    .cards-section .front:hover {
+    transform: translateY(-1px); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+    border-color: #89b6a0; 
+    }
+
 </style>
 
 <body>
