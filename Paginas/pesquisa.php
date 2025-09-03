@@ -9,6 +9,10 @@ $pesquisa = $_GET['BarraPesquisa'] ?? '';
 ?>
 <link rel="stylesheet" href="../Estilos/PagCardsEstilo.css"> <title>Resultados da Pesquisa - Lagoa da Chapadinha</title>
 <style>
+    main {
+        height: 85vh;
+    }
+
     .search-results-title {
         font-family: 'Marcellus', serif;
         color: #4b6043;
