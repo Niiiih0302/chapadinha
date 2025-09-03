@@ -97,9 +97,51 @@ include '../includes/head.php';
     <main class="container my-5">
         <?php if (!empty($itemData)): ?>
             <div class="detalhes-container shadow-lg">
-                <div class="detalhes-imagem-wrapper">
-                    <img src="<?php echo $url_img . (!empty($itemData['imagens']) ? htmlspecialchars($itemData['imagens'][0]) : 'placeholder-arvore.png'); ?>" alt="Imagem de <?php echo htmlspecialchars($pageTitle); ?>" class="img-fluid rounded">
+            <div class="detalhes-imagem-wrapper">
+    <?php if (!empty($itemData['imagens']) && count($itemData['imagens']) > 0): ?>
+
+        <div id="carouselDetalhesIndicadores" class="carousel slide shadow-sm" data-bs-ride="carousel">
+
+            <?php if (count($itemData['imagens']) > 1): ?>
+            <div class="carousel-indicators">
+                <?php foreach ($itemData['imagens'] as $index => $imagem): ?>
+                    <button type="button" 
+                            data-bs-target="#carouselDetalhesIndicadores" 
+                            data-bs-slide-to="<?php echo $index; ?>" 
+                            class="<?php echo ($index == 0) ? 'active' : ''; ?>" 
+                            aria-current="<?php echo ($index == 0) ? 'true' : 'false'; ?>" 
+                            aria-label="Slide <?php echo $index + 1; ?>"></button>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+
+            <div class="carousel-inner rounded">
+                <?php foreach ($itemData['imagens'] as $index => $imagem):
+                    $activeClass = ($index == 0) ? 'active' : '';
+                ?>
+                <div class="carousel-item <?php echo $activeClass; ?>">
+                    <img src="<?php echo $url_img . htmlspecialchars($imagem); ?>" class="d-block w-100" alt="Imagem <?php echo $index + 1; ?> de <?php echo htmlspecialchars($pageTitle); ?>">
                 </div>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if (count($itemData['imagens']) > 1): ?>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselDetalhesIndicadores" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselDetalhesIndicadores" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            <?php endif; ?>
+
+        </div>
+
+    <?php else: ?>
+        <img src="<?php echo $url_img . 'placeholder-arvore.png'; ?>" alt="Imagem de <?php echo htmlspecialchars($pageTitle); ?>" class="img-fluid rounded">
+    <?php endif; ?>
+</div>
 
                 <div class="detalhes-curiosidades">
                     <button class="btn btn-outline-success btn-share" onclick="sharePage()" title="Compartilhar">
