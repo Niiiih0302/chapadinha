@@ -20,7 +20,8 @@
         <section id="sobre-fatec" class="mb-5 content-section">
             <h2 class="section-title">Sobre a Fatec</h2>
             <div class="fatec-content">
-                <img src="../img/logoFatec.png" alt="Logo Fatec Horizontal" class="fatec-logo img-fluid mb-3"> <p>A Faculdade de Tecnologia (Fatec) é uma renomada instituição de ensino superior pública e gratuita do estado de São Paulo, mantida pelo Centro Paula Souza. Reconhecida pela excelência na formação de tecnólogos, a Fatec oferece cursos sintonizados com as mais atuais demandas do mercado de trabalho, proporcionando uma educação de alta qualidade que impulsiona a carreira e o desenvolvimento profissional de seus estudantes.</p>
+                <img src="../img/logoFatec.png" alt="Logo Fatec Horizontal" class="fatec-logo img-fluid mb-3">
+                <p>A Faculdade de Tecnologia (Fatec) é uma renomada instituição de ensino superior pública e gratuita do estado de São Paulo, mantida pelo Centro Paula Souza. Reconhecida pela excelência na formação de tecnólogos, a Fatec oferece cursos sintonizados com as mais atuais demandas do mercado de trabalho, proporcionando uma educação de alta qualidade que impulsiona a carreira e o desenvolvimento profissional de seus estudantes.</p>
                 <p>Este projeto é um exemplo do conhecimento aplicado e da dedicação dos alunos da Fatec Itapetininga (ou a unidade correspondente), desenvolvido como parte fundamental de suas atividades acadêmicas, demonstrando na prática as competências adquiridas ao longo do curso.</p>
                 <p><strong>Quer transformar seu futuro com uma educação de ponta e foco no mercado?</strong></p>
                 <p>Descubra os cursos oferecidos e prepare-se para uma carreira de sucesso. Visite o site oficial para mais informações sobre o processo seletivo e como se inscrever!</p>
@@ -35,13 +36,14 @@
                 <?php
                 $integrantes = [
                     ["nome" => "Luiz Guilherme de Queiroz Soares", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png", "github" => "LuizGQS", "foto" => "..\img\FotoDev\FotoDeLuizGuilhermeDeQueiroz.png", "link" => "https://github.com/LuizGQS"],
-                    ["nome" => "Marcos Siqueira Santos", "funcao" => "Desenvolvedor(a) Frontend","icone" => "..\img\github-logo.png", "github" => "MarcosSiqueiraSantos" ,"foto" => "..\img\FotoDev\FotoDeMarcosSiqueiraSantos.png", "link" => "https://github.com/MarcosSiqueiraSantos"],
-                    ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png" ,"github" => "NathanLucasVieira", "foto" => "..\img\FotoDev\FotoDeNathanLucasDePaulaVieira.jpg", "link" => "https://github.com/NathanLucasVieira"],
-                    ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png", "github" => "zCastroz" ,"foto" => "..\img\FotoDev\FotoDeRenanDeCastro.png", "link" => "https://github.com/zCastroz"],
-                    ["nome" => "Julianne Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "icone" => "..\img\github-logo.png", "github" => "Julianne-Barbosa","foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg", "link" => "https://github.com/Julianne-Barbosa"],
-                    ["nome" => "Maria Clara Chiromito Trombeta", "funcao" => "Desenvolvedor(a) Backend","icone" => "..\img\github-logo.png", "github" => "mariachiromito" ,"foto" => "..\img\FotoDev\FotoDeMariaClara.png", "link" => "https://github.com/mariachiromito"],
-                    ["nome" => "Naiane Rivia De Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend","icone" => "..\img\github-logo.png", "github" => "Naiane20Oliveira" ,"foto" => "..\img\FotoDev\FotoDeNaiane.png", "link" => "https://github.com/Naiane20Oliveira"],
-                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) Backend","icone" => "..\img\github-logo.png", "github" => "Niiiih0302" ,"foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg", "link" => "https://github.com/Niiiih0302"],
+                    ["nome" => "Marcos Siqueira Santos", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png", "github" => "MarcosSiqueiraSantos", "foto" => "..\img\FotoDev\FotoDeMarcosSiqueiraSantos.png", "link" => "https://github.com/MarcosSiqueiraSantos"],
+                    ["nome" => "Nathan Lucas de Paula Vieira", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png", "github" => "NathanLucasVieira", "foto" => "..\img\FotoDev\FotoDeNathanLucasDePaulaVieira.jpg", "link" => "https://github.com/NathanLucasVieira"],
+                    ["nome" => "Renan de Castro Machado", "funcao" => "Desenvolvedor(a) Frontend", "icone" => "..\img\github-logo.png", "github" => "zCastroz", "foto" => "..\img\FotoDev\FotoDeRenanDeCastro.png", "link" => "https://github.com/zCastroz"],
+                    ["nome" => "Julianne Rodrigues Barbosa", "funcao" => "Desenvolvedor(a) Backend", "icone" => "..\img\github-logo.png", "github" => "Julianne-Barbosa", "foto" => "..\img\FotoDev\FotoDeJulianneBarbosa.jpg", "link" => "https://github.com/Julianne-Barbosa"],
+                    ["nome" => "Maria Clara Chiromito Trombeta", "funcao" => "Desenvolvedor(a) Backend", "icone" => "..\img\github-logo.png", "github" => "mariachiromito", "foto" => "..\img\FotoDev\FotoDeMariaClara.png", "link" => "https://github.com/mariachiromito"],
+                    ["nome" => "Naiane Rivia De Jesus Oliveira", "funcao" => "Desenvolvedor(a) Backend", "icone" => "..\img\github-logo.png", "github" => "Naiane20Oliveira", "foto" => "..\img\FotoDev\FotoDeNaiane.png", "link" => "https://github.com/Naiane20Oliveira"],
+                    ["nome" => "Nicole Rodrigues Dos Santos", "funcao" => "Desenvolvedor(a) Backend", "icone" => "..\img\github-logo.png", "github" => "Niiiih0302", "foto" => "..\img\FotoDev\FotoDeNicoleSantos.jpg", "link" => "https://github.com/Niiiih0302"],
+
                 ];
 
                 foreach ($integrantes as $integrante) {
@@ -52,11 +54,42 @@
                             <div class="card-body">
                                 <h5 class="card-title integrante-nome"><?php echo htmlspecialchars($integrante['nome']); ?></h5>
                                 <p class="card-text integrante-funcao"><?php echo htmlspecialchars($integrante['funcao']); ?></p>
-                                
-                                    <a id = "link-github" href = "<?php echo htmlspecialchars($integrante['link']); ?>">
-                                    <img src="<?php echo htmlspecialchars($integrante['icone']); ?>" class="card-img-top integrante-icone" alt="Foto de <?php echo htmlspecialchars($integrante['github']); ?>">
+
+                                <a id="link-github" href="<?php echo htmlspecialchars($integrante['link']); ?>">
+                                    <img src="<?php echo htmlspecialchars($integrante['icone']); ?>" class="card-img-top integrante-icone" alt="Logo do Github">
                                     <p class="card-text integrante-github"><?php echo htmlspecialchars($integrante['github']); ?></p>
-                                    </a>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+        </section>
+
+        <section id="orientadores-projeto" class="mb-5 content-section">
+            <h2 class="section-title">Orientadores do Projeto</h2>
+            <div class="row row-cols-1 row-cols-sm-2 g-4 justify-content-center">
+                <?php
+                $orientadores = [
+                    ["nome" => "Dr. Ademir Diniz Neves", "funcao" => "Orientador", "icone" => "..\img\cnpq-logo.png", "social" => "Ademir Diniz Neves", "foto" => "..\img\FotoDev\FotoDeDrAdemir.png", "link" => "http://lattes.cnpq.br/6385037516977946"],
+                    ["nome" => "Dra. Andréia Rodrigues Casare", "funcao" => "Orientadora", "icone" => "..\img\github-logo.png", "social" => "casareandreia-gif", "foto" => "..\img\FotoDev\FotoDeDraAndreia.png", "link" => "https://github.com/casareandreia-gif"],
+                ];
+
+                foreach ($orientadores as $orientador) {
+                ?>
+                    <div class="col">
+                        <div class="card h-100 text-center integrante-card">
+                            <img src="<?php echo htmlspecialchars($orientador['foto']); ?>" class="card-img-top integrante-foto" alt="Foto de <?php echo htmlspecialchars($orientador['nome']); ?>">
+                            <div class="card-body">
+                                <h5 class="card-title integrante-nome"><?php echo htmlspecialchars($orientador['nome']); ?></h5>
+                                <p class="card-text integrante-funcao"><?php echo htmlspecialchars($orientador['funcao']); ?></p>
+
+                                <a id="link-social" href="<?php echo htmlspecialchars($orientador['link']); ?>" target="_blank">
+                                    <img src="<?php echo htmlspecialchars($orientador['icone']); ?>" class="card-img-top integrante-icone">
+                                    <p class="card-text integrante-github"><?php echo htmlspecialchars($orientador['social']); ?></p>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -69,5 +102,6 @@
     </main>
 
     <?php include '../includes/footer.php'; ?>
-    </body>
+</body>
+
 </html>
