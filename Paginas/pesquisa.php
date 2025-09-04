@@ -10,7 +10,7 @@ $pesquisa = $_GET['BarraPesquisa'] ?? '';
 <link rel="stylesheet" href="../Estilos/PagCardsEstilo.css"> <title>Resultados da Pesquisa - Lagoa da Chapadinha</title>
 <style>
     main {
-        height: 85vh;
+        /* A propriedade height foi removida para permitir que o conteúdo defina a altura, o que funciona melhor com o sticky footer. */
     }
 
     .search-results-title {
@@ -39,6 +39,16 @@ $pesquisa = $_GET['BarraPesquisa'] ?? '';
     transform: translateY(-1px); 
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
     border-color: #89b6a0; 
+    }
+    
+    /* Media query para ajustar o título em telas menores */
+    @media (max-width: 768px) {
+        .search-results-title {
+            font-size: 1.8rem; /* Reduz o tamanho da fonte do título principal */
+        }
+        .suggestion-title {
+            font-size: 1.2rem; /* Reduz o tamanho da fonte do título de sugestões */
+        }
     }
 
 </style>

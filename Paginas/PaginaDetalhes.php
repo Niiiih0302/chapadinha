@@ -9,7 +9,6 @@ $pageTitle = 'Detalhes do Item';
 $url_img = '/chapadinha/img/';
 
 if ($itemType === 'arvore') {
-    // ... (toda a sua lógica PHP para buscar dados permanece a mesma) ...
     $stmt_main = $conn->prepare("
         SELECT
             a.id, a.nome_cientifico, a.familia, a.genero, a.curiosidade,
@@ -57,33 +56,34 @@ if ($itemType === 'arvore') {
         $descricao = "Árvore $tipo, $medicinal e $toxica.";
     }
 } elseif ($itemType === 'cupim') {
-    // ... (lógica para cupim) ...
-     $itemData = [
-        'id' => $itemId,
-        'nome_cientifico' => 'Termitidae Structuris',
-        'nome_popular' => 'Cupinzeiro da Chapadinha',
-        'familia' => 'Termitidae',
-        'genero' => 'Cornitermes',
-        'curiosidade' => 'Os cupinzeiros são ecossistemas em miniatura, abrigando não apenas cupins, mas também outros insetos e até pequenos vertebrados. A estrutura interna é complexa, com túneis e câmaras para ventilação, cultivo de fungos e armazenamento de alimentos. Eles são essenciais para a ciclagem de nutrientes no solo.',
-        'imagens' => ['cupim-card.png'],
-        'habitat' => 'Campos abertos e bordas de mata',
-        'dieta' => 'Material vegetal em decomposição, celulose',
-        'importancia_ecologica' => 'Decomposição de matéria orgânica, aeração do solo, fonte de alimento.'
-    ];
-    $pageTitle = $itemData['nome_popular'];
+    // Busca dados do cupinzeiro do banco de dados
+    $stmt_cupim = $conn->prepare("SELECT * FROM cupinzeiro WHERE id = ?");
+    if (!$stmt_cupim) { die("Erro na preparação da consulta do cupinzeiro: " . $conn->error); }
+    $stmt_cupim->bind_param("i", $itemId);
+    $stmt_cupim->execute();
+    $resultado_cupim = $stmt_cupim->get_result();
+    $itemData = $resultado_cupim->fetch_assoc();
+    $stmt_cupim->close();
+    
+    if ($itemData) {
+        $itemData['imagens'] = [$itemData['imagem']]; // Coloca a imagem em um array para consistência com 'arvore'
+        $pageTitle = $itemData['nome_popular'];
+    }
 } elseif ($itemType === 'lago') {
-    // ... (lógica para lago) ...
-    $itemData = [
-        'id' => $itemId,
-        'nome_popular' => 'Lagoa da Chapadinha',
-        'curiosidade' => 'A Lagoa da Chapadinha é um ponto central da vida selvagem local, oferecendo recursos hídricos vitais e um habitat diversificado. Sua conservação é crucial para manter o equilíbrio ecológico da região. Atividades de educação ambiental são frequentemente realizadas em suas margens para conscientizar a população sobre sua importância.',
-        'imagens' => ['lago-card.png'],
-        'localizacao' => 'Parque Municipal da Chapadinha',
-        'tipo_agua' => 'Doce, com pH neutro',
-        'fauna_destaque' => 'Peixes como lambaris e traíras, aves aquáticas como garças e patos-selvagens, além de capivaras.',
-        'flora_destaque' => 'Presença de aguapés, taboas e vegetação ciliar nativa que protege as margens contra erosão.'
-    ];
-    $pageTitle = $itemData['nome_popular'];
+    // Busca dados da lagoa do banco de dados
+    $stmt_lagoa = $conn->prepare("SELECT * FROM lagoa WHERE id = ?");
+    if (!$stmt_lagoa) { die("Erro na preparação da consulta da lagoa: " . $conn->error); }
+    $stmt_lagoa->bind_param("i", $itemId);
+    $stmt_lagoa->execute();
+    $resultado_lagoa = $stmt_lagoa->get_result();
+    $itemData = $resultado_lagoa->fetch_assoc();
+    $stmt_lagoa->close();
+    
+    if ($itemData) {
+        $itemData['imagens'] = [$itemData['imagem']]; // Coloca a imagem em um array para consistência
+        $itemData['curiosidade'] = $itemData['descricao_geral']; // Usa a descrição geral como curiosidade para o layout
+        $pageTitle = $itemData['nome_popular'];
+    }
 }
 
 include '../includes/head.php';

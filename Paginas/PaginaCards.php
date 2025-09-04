@@ -223,16 +223,13 @@ switch ($tipo_filtro) {
             $itens_exibidos = 0;
 
             if ($tipo_filtro == 'todos' || $tipo_filtro == 'arvore') {
-                // ALTERADO: A consulta SQL foi atualizada para a nova estrutura do banco de dados.
-                $sql = "SELECT a.id, a.nome_cientifico, 
-                               np.nome AS nome_popular, 
-                               ai.caminho_imagem
+                $sql_arvore = "SELECT a.id, a.nome_cientifico, 
+                               (SELECT np.nome FROM nome_popular np WHERE np.fk_arvore = a.id ORDER BY np.id LIMIT 1) AS nome_popular,
+                               (SELECT ai.caminho_imagem FROM arvore_imagens ai WHERE ai.fk_arvore = a.id ORDER BY ai.id LIMIT 1) AS caminho_imagem
                         FROM arvore a
-                        LEFT JOIN nome_popular np ON a.id = np.fk_arvore
-                        LEFT JOIN arvore_imagens ai ON a.id = ai.fk_arvore
                         GROUP BY a.id
-                        ORDER BY np.nome, a.nome_cientifico";
-                $resultado = mysqli_query($conn, $sql);
+                        ORDER BY nome_popular, a.nome_cientifico";
+                $resultado = mysqli_query($conn, $sql_arvore);
 
                 if ($resultado && mysqli_num_rows($resultado) > 0) {
                     while ($arvore = mysqli_fetch_assoc($resultado)) {
@@ -252,40 +249,47 @@ switch ($tipo_filtro) {
                         </div>
             <?php
                     }
-                } elseif ($tipo_filtro == 'arvore') {
                 }
             }
 
             if ($tipo_filtro == 'todos' || $tipo_filtro == 'cupim') {
-                $itens_exibidos++;
+                $sql_cupim = "SELECT * FROM cupinzeiro WHERE id = 1";
+                $resultado_cupim = mysqli_query($conn, $sql_cupim);
+                if ($cupim = mysqli_fetch_assoc($resultado_cupim)) {
+                    $itens_exibidos++;
             ?>
                 <div class="card">
                     <div class="content">
                         <div class="front">
-                            <img src="<?php echo $url_img . 'cupim-card.png'; ?>" alt="Cupinzeiro da Chapadinha">
-                            <h3>Cupinzeiro</h3>
-                            <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em>Termitidae Structuris</em></p>
-                            <a href="PaginaDetalhes.php?type=cupim&id=1" class="btn btn-card-details">Ver Detalhes</a>
+                            <img src="<?php echo $url_img . htmlspecialchars($cupim['imagem']); ?>" alt="<?php echo htmlspecialchars($cupim['nome_popular']); ?>">
+                            <h3><?php echo htmlspecialchars($cupim['nome_popular']); ?></h3>
+                            <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($cupim['nome_cientifico']); ?></em></p>
+                            <a href="PaginaDetalhes.php?type=cupim&id=<?php echo htmlspecialchars($cupim['id']); ?>" class="btn btn-card-details">Ver Detalhes</a>
                         </div>
                     </div>
                 </div>
             <?php
+                }
             }
 
             if ($tipo_filtro == 'todos' || $tipo_filtro == 'lago') {
-                $itens_exibidos++;
+                $sql_lagoa = "SELECT * FROM lagoa WHERE id = 1";
+                $resultado_lagoa = mysqli_query($conn, $sql_lagoa);
+                if ($lagoa = mysqli_fetch_assoc($resultado_lagoa)) {
+                    $itens_exibidos++;
             ?>
                 <div class="card">
                     <div class="content">
                         <div class="front">
-                             <img src="<?php echo $url_img . 'lago-card.png'; ?>" alt="Lagoa da Chapadinha">
-                            <h3>Lagoa</h3>
+                             <img src="<?php echo $url_img . htmlspecialchars($lagoa['imagem']); ?>" alt="<?php echo htmlspecialchars($lagoa['nome_popular']); ?>">
+                            <h3><?php echo htmlspecialchars($lagoa['nome_popular']); ?></h3>
                             <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em>Ecossistema Aquático</em></p>
-                            <a href="PaginaDetalhes.php?type=lago&id=1" class="btn btn-card-details">Ver Detalhes</a>
+                            <a href="PaginaDetalhes.php?type=lago&id=<?php echo htmlspecialchars($lagoa['id']); ?>" class="btn btn-card-details">Ver Detalhes</a>
                         </div>
                     </div>
                 </div>
             <?php
+                }
             }
             
             if ($itens_exibidos == 0) {
