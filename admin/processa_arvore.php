@@ -28,7 +28,7 @@ function processarUploadImagens($files, $dir_img_param) {
             throw new Exception("Tipo de arquivo não permitido: " . htmlspecialchars($files['name'][$i])); 
         }
         
-        $tamanho_maximo = 5 * 1024 * 1024; 
+        $tamanho_maximo = 10 * 1024 * 1024; 
         if ($files['size'][$i] > $tamanho_maximo) { 
             throw new Exception("O tamanho do arquivo excede 5MB: " . htmlspecialchars($files['name'][$i])); 
         }
