@@ -9,6 +9,19 @@ $tipo_filtro = $_GET['tipo'] ?? 'todos';
 $titulo_catalogo = "Catálogo";
 $subtitulo_catalogo = "Explore a rica biodiversidade da Lagoa da Chapadinha.";
 
+$cupim_data = null;
+$lagoa_data = null;
+
+if ($tipo_filtro == 'todos' || $tipo_filtro == 'cupim') {
+    $result_cupim = $conn->query("SELECT nome_popular, nome_cientifico, imagem FROM cupinzeiro WHERE id = 1");
+    if($result_cupim) $cupim_data = $result_cupim->fetch_assoc();
+}
+if ($tipo_filtro == 'todos' || $tipo_filtro == 'lagoa') {
+    $result_lagoa = $conn->query("SELECT nome_popular, imagem FROM lagoa WHERE id = 1");
+    if($result_lagoa) $lagoa_data = $result_lagoa->fetch_assoc();
+}
+
+
 switch ($tipo_filtro) {
     case 'arvore':
         $titulo_catalogo = "Árvores Catalogadas";
@@ -18,7 +31,7 @@ switch ($tipo_filtro) {
         $titulo_catalogo = "Cupinzeiros";
         $subtitulo_catalogo = "Descubra a fascinante vida dos cupinzeiros e sua importância ecológica.";
         break;
-    case 'lago':
+    case 'lagoa':
         $titulo_catalogo = "Lagoa";
         $subtitulo_catalogo = "Aprenda sobre os ecossistemas aquáticos e seus habitantes.";
         break;
@@ -33,12 +46,12 @@ switch ($tipo_filtro) {
 <link rel="stylesheet" href="../Estilos/PagCardsEstilo.css">
 <title><?php echo htmlspecialchars($titulo_catalogo); ?> - Lagoa da Chapadinha</title>
 <style>
-    /* Estilos para o banner de catálogo */
+
     .banner-catalogo {
-        background-image: url('../img/banner-catalogos.jpg'); /* Adicione uma imagem de fundo aqui */
+        background-image: url('../img/banner-catalogos.jpg'); 
         background-size: cover;
         background-position: center;
-        min-height: 30vh; /* Altura menor que o hero da index, mas ainda impactante */
+        min-height: 30vh; 
         display: flex;
         align-items: center;
         justify-content: center;
@@ -46,9 +59,9 @@ switch ($tipo_filtro) {
         color: white;
         position: relative;
         overflow: hidden;
-        margin-top: -5.5rem; /* Ajuste para colar abaixo do header fixo */
-        padding-top: 5.5rem; /* Compensa o margin-top para o conteúdo interno */
-        margin-bottom: 2rem; /* Espaçamento após o banner */
+        margin-top: -5.5rem; 
+        padding-top: 5.5rem; 
+        margin-bottom: 2rem; 
     }
 
     .banner-overlay {
@@ -57,7 +70,7 @@ switch ($tipo_filtro) {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Escurece a imagem */
+        background-color: rgba(0, 0, 0, 0.5); 
         z-index: 1;
     }
 
@@ -82,17 +95,16 @@ switch ($tipo_filtro) {
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
     }
 
-    /* Estilos existentes e ajustados */
     .filter-buttons {
-        margin-bottom: 2rem; /* Adicionado um pouco mais de espaço */
+        margin-bottom: 2rem; 
     }
     .filter-buttons .btn {
         margin: 0.25rem;
-        transition: all 0.3s ease; /* Transição suave para os botões de filtro */
+        transition: all 0.3s ease; 
         font-weight: 600;
     }
     .filter-buttons .btn-success {
-        background-color: #89b6a0; /* Verde mais suave para ativo */
+        background-color: #89b6a0; 
         border-color: #89b6a0;
         color: white;
     }
@@ -147,15 +159,15 @@ switch ($tipo_filtro) {
         background-color: #e9ecef;
         padding: 1.5rem;
         border-radius: 0.5rem;
-        margin-bottom: 2.5rem; /* Aumenta um pouco a margem */
+        margin-bottom: 2.5rem; 
     }
     .search-bar-container .form-control {
         border-color: #89b6a0;
-        box-shadow: none; /* Remove a sombra padrão do foco */
+        box-shadow: none; 
     }
     .search-bar-container .form-control:focus {
-        border-color: #6f9683; /* Cor mais escura ao focar */
-        box-shadow: 0 0 0 0.25rem rgba(137, 182, 160, 0.25); /* Sombra suave ao focar */
+        border-color: #6f9683; 
+        box-shadow: 0 0 0 0.25rem rgba(137, 182, 160, 0.25); 
     }
     .search-bar-container .btn-primary {
         background-color: #89b6a0;
@@ -165,12 +177,11 @@ switch ($tipo_filtro) {
         background-color: #7aa891;
         border-color: #7aa891;
     }
-    /* O título 'catalogo-title' foi movido para dentro do banner */
+
     .catalogo-title {
-        display: none; /* Esconde o título antigo */
+        display: none; 
     }
 
-    /* Responsividade do banner */
     @media (max-width: 768px) {
         .banner-content h1 {
             font-size: 2.2rem;
@@ -212,7 +223,7 @@ switch ($tipo_filtro) {
     <div class="container mb-4 text-center filter-buttons">
         <a href="PaginaCards.php?tipo=todos" class="btn <?php echo ($tipo_filtro == 'todos' ? 'btn-success' : 'btn-outline-success'); ?>">Todos</a>
         <a href="PaginaCards.php?tipo=arvore" class="btn <?php echo ($tipo_filtro == 'arvore' ? 'btn-success' : 'btn-outline-success'); ?>">Árvores</a>
-        <a href="PaginaCards.php?tipo=lago" class="btn <?php echo ($tipo_filtro == 'lago' ? 'btn-info text-dark' : 'btn-outline-info text-dark'); ?>">Lagoa</a>
+        <a href="PaginaCards.php?tipo=lagoa" class="btn <?php echo ($tipo_filtro == 'lagoa' ? 'btn-info text-dark' : 'btn-outline-info text-dark'); ?>">Lagoa</a>
         <a href="PaginaCards.php?tipo=cupim" class="btn <?php echo ($tipo_filtro == 'cupim' ? 'btn-warning text-dark' : 'btn-outline-warning text-dark'); ?>">Cupinzeiros</a>
         
     </div>
@@ -223,13 +234,16 @@ switch ($tipo_filtro) {
             $itens_exibidos = 0;
 
             if ($tipo_filtro == 'todos' || $tipo_filtro == 'arvore') {
-                $sql_arvore = "SELECT a.id, a.nome_cientifico, 
-                               (SELECT np.nome FROM nome_popular np WHERE np.fk_arvore = a.id ORDER BY np.id LIMIT 1) AS nome_popular,
-                               (SELECT ai.caminho_imagem FROM arvore_imagens ai WHERE ai.fk_arvore = a.id ORDER BY ai.id LIMIT 1) AS caminho_imagem
+
+                $sql = "SELECT 
+                            a.id, 
+                            (SELECT ai.caminho_imagem FROM arvore_imagens ai WHERE ai.fk_arvore = a.id ORDER BY ai.id LIMIT 1) as imagem,
+                            (SELECT np.nome FROM nome_popular np WHERE np.fk_arvore = a.id ORDER BY np.id LIMIT 1) AS nome_popular,
+                            a.nome_cientifico
                         FROM arvore a
                         GROUP BY a.id
                         ORDER BY nome_popular, a.nome_cientifico";
-                $resultado = mysqli_query($conn, $sql_arvore);
+                $resultado = mysqli_query($conn, $sql);
 
                 if ($resultado && mysqli_num_rows($resultado) > 0) {
                     while ($arvore = mysqli_fetch_assoc($resultado)) {
@@ -238,7 +252,7 @@ switch ($tipo_filtro) {
                         <div class="card">
                             <div class="content">
                                 <div class="front">
-                                    <img src="<?php echo $url_img . (!empty($arvore['caminho_imagem']) ? htmlspecialchars($arvore['caminho_imagem']) : 'placeholder-arvore.png'); ?>" alt="<?php echo htmlspecialchars($arvore['nome_popular'] ?? $arvore['nome_cientifico']); ?>">
+                                    <img src="<?php echo $url_img . (!empty($arvore['imagem']) ? htmlspecialchars($arvore['imagem']) : 'placeholder-arvore.png'); ?>" alt="<?php echo htmlspecialchars($arvore['nome_popular'] ?? $arvore['nome_cientifico']); ?>">
                                     <h3><?php echo htmlspecialchars($arvore['nome_popular'] ?? $arvore['nome_cientifico']); ?></h3>
                                     <?php if(!empty($arvore['nome_popular']) && !empty($arvore['nome_cientifico']) && $arvore['nome_popular'] != $arvore['nome_cientifico']): ?>
                                         <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($arvore['nome_cientifico']); ?></em></p>
@@ -252,44 +266,36 @@ switch ($tipo_filtro) {
                 }
             }
 
-            if ($tipo_filtro == 'todos' || $tipo_filtro == 'cupim') {
-                $sql_cupim = "SELECT * FROM cupinzeiro WHERE id = 1";
-                $resultado_cupim = mysqli_query($conn, $sql_cupim);
-                if ($cupim = mysqli_fetch_assoc($resultado_cupim)) {
-                    $itens_exibidos++;
+            if (($tipo_filtro == 'todos' || $tipo_filtro == 'cupim') && $cupim_data) {
+                $itens_exibidos++;
             ?>
                 <div class="card">
                     <div class="content">
                         <div class="front">
-                            <img src="<?php echo $url_img . htmlspecialchars($cupim['imagem']); ?>" alt="<?php echo htmlspecialchars($cupim['nome_popular']); ?>">
-                            <h3><?php echo htmlspecialchars($cupim['nome_popular']); ?></h3>
-                            <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($cupim['nome_cientifico']); ?></em></p>
-                            <a href="PaginaDetalhes.php?type=cupim&id=<?php echo htmlspecialchars($cupim['id']); ?>" class="btn btn-card-details">Ver Detalhes</a>
+                            <img src="<?php echo $url_img . htmlspecialchars($cupim_data['imagem']); ?>" alt="<?php echo htmlspecialchars($cupim_data['nome_popular']); ?>">
+                            <h3><?php echo htmlspecialchars($cupim_data['nome_popular']); ?></h3>
+                            <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em><?php echo htmlspecialchars($cupim_data['nome_cientifico']); ?></em></p>
+                            <a href="PaginaDetalhes.php?type=cupim&id=1" class="btn btn-card-details">Ver Detalhes</a>
                         </div>
                     </div>
                 </div>
             <?php
-                }
             }
 
-            if ($tipo_filtro == 'todos' || $tipo_filtro == 'lago') {
-                $sql_lagoa = "SELECT * FROM lagoa WHERE id = 1";
-                $resultado_lagoa = mysqli_query($conn, $sql_lagoa);
-                if ($lagoa = mysqli_fetch_assoc($resultado_lagoa)) {
-                    $itens_exibidos++;
+            if (($tipo_filtro == 'todos' || $tipo_filtro == 'lagoa') && $lagoa_data) {
+                $itens_exibidos++;
             ?>
                 <div class="card">
                     <div class="content">
                         <div class="front">
-                             <img src="<?php echo $url_img . htmlspecialchars($lagoa['imagem']); ?>" alt="<?php echo htmlspecialchars($lagoa['nome_popular']); ?>">
-                            <h3><?php echo htmlspecialchars($lagoa['nome_popular']); ?></h3>
+                             <img src="<?php echo $url_img . htmlspecialchars($lagoa_data['imagem']); ?>" alt="<?php echo htmlspecialchars($lagoa_data['nome_popular']); ?>">
+                            <h3><?php echo htmlspecialchars($lagoa_data['nome_popular']); ?></h3>
                             <p style="font-size:0.8em; margin-top: -5px; color: #555;"><em>Ecossistema Aquático</em></p>
-                            <a href="PaginaDetalhes.php?type=lago&id=<?php echo htmlspecialchars($lagoa['id']); ?>" class="btn btn-card-details">Ver Detalhes</a>
+                            <a href="PaginaDetalhes.php?type=lagoa&id=1" class="btn btn-card-details">Ver Detalhes</a>
                         </div>
                     </div>
                 </div>
             <?php
-                }
             }
             
             if ($itens_exibidos == 0) {
@@ -300,6 +306,9 @@ switch ($tipo_filtro) {
     </div>
 </main>
 
-<?php include '../includes/footer.php'; ?>
+<?php 
+$conn->close();
+include '../includes/footer.php'; 
+?>
 </body>
 </html>

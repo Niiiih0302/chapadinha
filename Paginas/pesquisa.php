@@ -1,16 +1,16 @@
 <?php
-// pesquisa.php
-include '../includes/head.php'; // Para tags <head> e Bootstrap CSS
-include '../includes/conexao.php'; // Para conexão com o banco
 
-$url_img = '/chapadinha/img/'; // Certifique-se que este caminho está correto a partir da raiz do servidor
+include '../includes/head.php'; 
+include '../includes/conexao.php';
+
+$url_img = '/chapadinha/img/'; 
 $pesquisa = $_GET['BarraPesquisa'] ?? '';
 
 ?>
 <link rel="stylesheet" href="../Estilos/PagCardsEstilo.css"> <title>Resultados da Pesquisa - Lagoa da Chapadinha</title>
 <style>
     main {
-        /* A propriedade height foi removida para permitir que o conteúdo defina a altura, o que funciona melhor com o sticky footer. */
+        
     }
 
     .search-results-title {
@@ -34,20 +34,20 @@ $pesquisa = $_GET['BarraPesquisa'] ?? '';
         font-size: 1.5rem;
     }
 
-    /* Efeito de hover no card */
+
     .cards-section .front:hover {
     transform: translateY(-1px); 
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
     border-color: #89b6a0; 
     }
     
-    /* Media query para ajustar o título em telas menores */
+
     @media (max-width: 768px) {
         .search-results-title {
-            font-size: 1.8rem; /* Reduz o tamanho da fonte do título principal */
+            font-size: 1.8rem; 
         }
         .suggestion-title {
-            font-size: 1.2rem; /* Reduz o tamanho da fonte do título de sugestões */
+            font-size: 1.2rem; 
         }
     }
 
@@ -55,7 +55,7 @@ $pesquisa = $_GET['BarraPesquisa'] ?? '';
 
 <body>
 <?php 
-include '../includes/header.php'; // Inclui o cabeçalho padrão
+include '../includes/header.php'; 
 ?>
 
 <main class="container my-5">
@@ -120,7 +120,6 @@ include '../includes/header.php'; // Inclui o cabeçalho padrão
                 }
                 $stmt_like->close();
 
-                // Se não houver resultados diretos, tentar busca fonética
                 if (!$resultados_encontrados_direto) {
                     echo "<p class='text-center w-100'>Nenhum resultado direto encontrado para '<strong>" . htmlspecialchars($pesquisa) . "</strong>'.</p>";
 
@@ -134,7 +133,7 @@ include '../includes/header.php'; // Inclui o cabeçalho padrão
                             LEFT JOIN nome_popular np ON np.fk_arvore = a.id
                             WHERE SOUNDEX(a.nome_cientifico) = SOUNDEX(?) OR SOUNDEX(np.nome) = SOUNDEX(?)
                             GROUP BY a.id
-                            LIMIT 3"; // Limitar o número de sugestões fonéticas
+                            LIMIT 3"; 
 
                         $stmt_soundex = $conn->prepare($query_soundex);
                         if ($stmt_soundex) {
@@ -168,7 +167,7 @@ include '../includes/header.php'; // Inclui o cabeçalho padrão
                         }
                     }
                 }
-                // Se, mesmo após a busca fonética (se aplicável), nada foi encontrado no geral
+
                 if (!$resultados_encontrados_direto && !$sugestoes_encontradas) {
                   
                 }
