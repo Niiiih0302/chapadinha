@@ -1,16 +1,11 @@
 <?php
-// Inicia a sessão
 session_start();
-
-// Se já estiver logado, redireciona para o dashboard
 if (isset($_SESSION['usuario_logado'])) {
     header('Location: arvores.php');
     exit;
 }
-
-// Verifica se há mensagem de erro\
 $erro = isset($_SESSION['login_erro']) ? $_SESSION['login_erro'] : '';
-unset($_SESSION['login_erro']); // Limpa a mensagem de erro
+unset($_SESSION['login_erro']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

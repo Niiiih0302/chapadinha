@@ -1,33 +1,24 @@
 <?php
-// Inclui cabeçalho
 require_once 'includes/header.php';
-
-// Inclui arquivos necessários
 require_once '../api/v1/config/database.php';
 require_once 'includes/Usuario.php';
 
-// Conecta ao banco de dados
 try {
     $db = getConnection();
     
-    // Inicializa a variável $usuarios como array vazio para evitar warnings
     $usuarios = [];
     
     if ($db->connect_error) {
         throw new Exception("Erro de conexão com o banco: " . $db->connect_error);
     }
     
-    // Instancia o modelo de usuário
     $usuarioModel = new Usuario($db);
     
-    // Busca todos os usuários
     $usuarios = $usuarioModel->listarTodos();
     
-    // Verifica se há mensagem de sucesso ou erro
     $sucesso = isset($_SESSION['usuario_sucesso']) ? $_SESSION['usuario_sucesso'] : '';
     $erro = isset($_SESSION['usuario_erro']) ? $_SESSION['usuario_erro'] : '';
     
-    // Limpa as mensagens
     unset($_SESSION['usuario_sucesso']);
     unset($_SESSION['usuario_erro']);
     
@@ -111,7 +102,6 @@ try {
     </div>
 </div>
 
-<!-- Modal Novo Usuário -->
 <div class="modal fade" id="modalNovoUsuario" tabindex="-1" aria-labelledby="modalNovoUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -153,7 +143,6 @@ try {
     </div>
 </div>
 
-<!-- Modal Editar Usuário -->
 <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -197,7 +186,6 @@ try {
     </div>
 </div>
 
-<!-- Modal Excluir Usuário -->
 <div class="modal fade" id="modalExcluirUsuario" tabindex="-1" aria-labelledby="modalExcluirUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -226,7 +214,6 @@ try {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Preenche o modal de edição
     const botoesEditar = document.querySelectorAll('.editar-usuario');
     botoesEditar.forEach(botao => {
         botao.addEventListener('click', function() {
@@ -238,13 +225,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('editar_nome_completo').value = nome;
             document.getElementById('editar_usuario').value = usuario;
             
-            // Limpa os campos de senha
             document.getElementById('editar_senha').value = '';
             document.getElementById('editar_confirmar_senha').value = '';
         });
     });
     
-    // Preenche o modal de exclusão
     const botoesExcluir = document.querySelectorAll('.excluir-usuario');
     botoesExcluir.forEach(botao => {
         botao.addEventListener('click', function() {
@@ -254,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('excluir_id').value = id;
             document.getElementById('excluir_nome').textContent = nome;
             
-            // Verifica se é o usuário logado atualmente
             const usuarioLogadoId = <?php echo $_SESSION['usuario_id'] ?? 0; ?>;
             const botaoExcluir = document.querySelector('#modalExcluirUsuario .btn-danger');
             
@@ -271,6 +255,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php
-// Inclui rodapé
 require_once 'includes/footer.php';
 ?>

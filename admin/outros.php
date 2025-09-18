@@ -5,11 +5,9 @@ require_once '../api/v1/config/database.php';
 try {
     $db = getConnection();
 
-    // Buscar dados do Cupinzeiro
     $result_cupim = $db->query("SELECT * FROM cupinzeiro WHERE id = 1");
     $cupim = $result_cupim->fetch_assoc();
 
-    // Buscar dados da Lagoa
     $result_lagoa = $db->query("SELECT * FROM lagoa WHERE id = 1");
     $lagoa = $result_lagoa->fetch_assoc();
 

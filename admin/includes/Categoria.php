@@ -1,22 +1,11 @@
 <?php
-/**
- * Classe Categoria - Modelo para acesso aos dados de categorias
- */
 class Categoria {
     private $conn;
     
-    /**
-     * Construtor
-     * @param mysqli $db Conexão com o banco de dados
-     */
     public function __construct($db) {
         $this->conn = $db;
     }
     
-    /**
-     * Lista todas as categorias
-     * @return array
-     */
     public function listarTodas() {
         $query = "SELECT * FROM categorias ORDER BY nome ASC";
         
@@ -32,11 +21,6 @@ class Categoria {
         return $categorias;
     }
     
-    /**
-     * Busca categoria pelo ID
-     * @param int $id ID da categoria
-     * @return array|null
-     */
     public function buscarPorId($id) {
         $id = $this->conn->real_escape_string($id);
         
@@ -50,13 +34,7 @@ class Categoria {
         
         return null;
     }
-    
-    /**
-     * Verifica se o slug já existe
-     * @param string $slug Slug a verificar
-     * @param int|null $excluirId ID a excluir da verificação (para edição)
-     * @return bool
-     */
+   
     public function slugExiste($slug, $excluirId = null) {
         $slug = $this->conn->real_escape_string($slug);
         
@@ -72,13 +50,6 @@ class Categoria {
         return $result->num_rows > 0;
     }
     
-    /**
-     * Cria uma nova categoria
-     * @param string $nome Nome da categoria
-     * @param string $slug Slug da categoria
-     * @param string $descricao Descrição da categoria
-     * @return bool
-     */
     public function criar($nome, $slug, $descricao) {
         $nome = $this->conn->real_escape_string($nome);
         $slug = $this->conn->real_escape_string($slug);
@@ -90,14 +61,6 @@ class Categoria {
         return $this->conn->query($query);
     }
     
-    /**
-     * Atualiza uma categoria existente
-     * @param int $id ID da categoria
-     * @param string $nome Nome da categoria
-     * @param string $slug Slug da categoria
-     * @param string $descricao Descrição da categoria
-     * @return bool
-     */
     public function atualizar($id, $nome, $slug, $descricao) {
         $id = $this->conn->real_escape_string($id);
         $nome = $this->conn->real_escape_string($nome);
@@ -111,11 +74,6 @@ class Categoria {
         return $this->conn->query($query);
     }
     
-    /**
-     * Exclui uma categoria
-     * @param int $id ID da categoria
-     * @return bool
-     */
     public function excluir($id) {
         $id = $this->conn->real_escape_string($id);
         
@@ -124,11 +82,6 @@ class Categoria {
         return $this->conn->query($query);
     }
     
-    /**
-     * Conta o número de notícias associadas a uma categoria
-     * @param int $id ID da categoria
-     * @return int
-     */
     public function contarNoticias($id) {
         $id = $this->conn->real_escape_string($id);
         

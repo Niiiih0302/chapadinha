@@ -21,16 +21,13 @@ try {
     $db = getConnection();
     $db->begin_transaction();
 
-    // Lógica de Upload de Imagem
     $imagem_sql_update = "";
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == UPLOAD_ERR_OK) {
-        // Validações (pode expandir conforme necessário)
         $tipos_permitidos = ['image/jpeg', 'image/png', 'image/gif'];
         if (!in_array($_FILES['imagem']['type'], $tipos_permitidos)) {
             throw new Exception("Tipo de arquivo de imagem não permitido.");
         }
 
-        // Gera um nome único para o arquivo
         $extensao = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
         $nome_arquivo = $tipo . '_imagem_' . time() . '.' . $extensao;
         $caminho_arquivo = $dir_img_save . $nome_arquivo;

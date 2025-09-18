@@ -74,7 +74,6 @@ body {
 }
 
 
-/* Estilo dos botões (consistente com index.php) */
 .btn-outline-primary {
   border-color: #89b6a0; 
   color: #89b6a0;
@@ -116,7 +115,6 @@ body {
   border-color: #5A6268;
 }
 
-/* Ícones nos botões */
 .btn i {
     margin-right: 0.4em;
 }
@@ -190,28 +188,27 @@ body {
   max-width: 100%; 
 }
 
-/* Responsividade Aprimorada */
 @media (min-width: 992px) { 
   .detalhes-container {
-    flex-direction: row; /* Layout em linha para telas grandes */
+    flex-direction: row;
   }
   .detalhes-imagem-wrapper {
-    flex-basis: 45%; /* Define a largura base da imagem */
+    flex-basis: 45%; 
     flex-grow: 0;
   }
   .detalhes-curiosidades {
-    flex-basis: 50%; /* Define a largura base das curiosidades */
+    flex-basis: 50%; 
     flex-grow: 1;
   }
   .detalhes-info {
-    flex-basis: 100%; /* Ocupa a linha inteira abaixo */
+    flex-basis: 100%;
     margin-top: 1.5rem;
   }
 }
 
 @media (max-width: 991.98px) { 
   .detalhes-container {
-      flex-direction: column; /* Empilha os itens em telas menores */
+      flex-direction: column; 
       align-items: center; 
   }
 
@@ -220,13 +217,13 @@ body {
   .detalhes-info {
       max-width: 100%; 
       width: 100%; 
-      flex-basis: auto; /* Reseta a base flex */
+      flex-basis: auto; 
   }
 
   .detalhes-curiosidades {
-      order: -1; /* Move as curiosidades para cima da imagem */
+      order: -1; 
       margin-bottom: 20px;
-      padding: 1.5rem; /* Reduz o padding em telas menores */
+      padding: 1.5rem; 
   }
   
   .nome-item {
@@ -252,9 +249,9 @@ body {
       max-height: 250px; 
   }
   .nome-item {
-    font-size: 1.8rem; /* Reduz ainda mais a fonte do título */
+    font-size: 1.8rem; 
   }
   .curiosidades-titulo, .detalhes-info h3 {
-    font-size: 1.3rem; /* Reduz a fonte dos subtítulos */
+    font-size: 1.3rem; 
   }
 }

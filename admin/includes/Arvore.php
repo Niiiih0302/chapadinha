@@ -1,19 +1,9 @@
 <?php
 class Arvore {
     private $conn;
-    /**
-     * Construtor
-     * @param mysqli $db Conexão com o banco de dados
-     */
     public function __construct($db) {
         $this->conn = $db;
     }
-
-    /**
-     * Busca árvore completa pelo ID (sem biomas e medidas)
-     * @param int $id ID da árvore
-     * @return array|null
-     */
     public function buscarPorId($id) {
         try {
             $id = $this->conn->real_escape_string($id);
@@ -27,7 +17,6 @@ class Arvore {
             if ($result_arvore->num_rows > 0) {
                 $arvore = $result_arvore->fetch_assoc();
 
-                // Buscar imagens
                 $query_imagens = "SELECT id, caminho_imagem FROM arvore_imagens WHERE fk_arvore = '$id' ORDER BY id";
                 $result_imagens = $this->conn->query($query_imagens);
                 if (!$result_imagens) throw new Exception("Erro ao buscar imagens: " . $this->conn->error);
@@ -36,7 +25,6 @@ class Arvore {
                     $arvore['imagens'][] = $row_img;
                 }
 
-                // Buscar nomes populares
                 $query_np = "SELECT nome FROM nome_popular WHERE fk_arvore = '$id'";
                 $result_np = $this->conn->query($query_np);
                 if (!$result_np) throw new Exception("Erro ao buscar nomes populares: " . $this->conn->error);
@@ -45,7 +33,6 @@ class Arvore {
                     $arvore['nomes_populares'][] = $row_np['nome'];
                 }
 
-                // Buscar tipo de árvore
                 $query_tipo = "SELECT exotica_nativa, medicinal, toxica FROM tipo_arvore WHERE fk_arvore = '$id' LIMIT 1";
                 $result_tipo = $this->conn->query($query_tipo);
                 if (!$result_tipo) throw new Exception("Erro ao buscar tipo de árvore: " . $this->conn->error);
@@ -62,10 +49,6 @@ class Arvore {
         }
     }
 
-    /**
-     * Lista todas as árvores
-     * @return array
-     */
     public function listarTodas() {
         try {
             $query = "SELECT a.id, a.nome_cientifico, a.familia, a.genero, 
@@ -93,11 +76,6 @@ class Arvore {
         }
     }
     
-    /**
-     * Cria uma nova árvore com todos os seus dados relacionados.
-     * @param array $dados Dados da árvore e suas relações.
-     * @return int|false Retorna o ID da árvore criada ou false em caso de erro.
-     */
     public function criar(array $dados) {
         $this->conn->begin_transaction();
         try {
@@ -156,12 +134,6 @@ class Arvore {
         }
     }
 
-    /**
-     * Atualiza uma árvore existente e seus dados relacionados.
-     * @param int $id ID da árvore a ser atualizada.
-     * @param array $dados Novos dados da árvore e suas relações.
-     * @return bool
-     */
     public function atualizar($id, array $dados) {
         $this->conn->begin_transaction();
         try {
@@ -238,11 +210,6 @@ class Arvore {
         }
     }
 
-    /**
-     * Exclui uma árvore.
-     * @param int $id ID da árvore
-     * @return bool
-     */
     public function excluir($id) {
         try {
             $id = $this->conn->real_escape_string($id);

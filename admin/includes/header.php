@@ -1,5 +1,4 @@
 <?php
-// Inclui verificação de autenticação
 require_once 'auth_check.php';
 ?>
 <!DOCTYPE html>
@@ -11,33 +10,26 @@ require_once 'auth_check.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        /* Adiciona a linha vertical à direita do título */
         .navbar-brand {
             font-weight: bold;
             border-right: 1px solid rgba(255, 255, 255, 0.25);
             padding-right: 1rem;
         }
-
-        /* Prepara o link da navegação para o sublinhado */
         .navbar-nav .nav-link {
             position: relative;
             padding-left: 1rem;
             padding-right: 1rem;
         }
-
-        /* Estilo do sublinhado para o item ativo */
         .navbar-nav .nav-link.active::after {
             content: '';
             position: absolute;
-            bottom: 0px; /* Posição do sublinhado ajustada para mais baixo */
+            bottom: 0px; 
             left: 1rem;
             right: 1rem;
-            height: 2px; /* Espessura da linha ajustada para mais fina */
-            background-color: #ffffff; /* Cor branca */
+            height: 2px; 
+            background-color: #ffffff; 
             border-radius: 2px;
         }
-
-        /* Garante que o texto do link ativo permaneça branco */
         .navbar-nav .nav-link.active {
             color: #fff !important;
         }
